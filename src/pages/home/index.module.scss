@@ -1,0 +1,80 @@
+.home {
+  :global {
+    .at-tab-bar__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      view {
+        &:nth-child(2) {
+          order: -1;
+        }
+      }
+    }
+  }
+}
+
+page {
+  margin-top: -1px;
+  background-color: #404040;
+}
+
+.scrollview {
+  box-sizing: border-box;
+  //   height: calc(100% - 92px);
+  padding: 20px;
+
+  .cardItem {
+    width: 100%;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 20px;
+
+    .textContainer {
+      padding: 20px;
+      background-color: #1a1a1a;
+
+      view {
+        line-height: 1.8;
+
+        &:nth-child(1) {
+          color: #fff;
+          font-size: 26px;
+        }
+
+        &:nth-child(2) {
+          color: #ccc;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 35px 20px;
+  font-size: 30px;
+
+  .tabBtn {
+    text {
+      margin-right: 30px;
+      padding: 10px;
+
+      &.act {
+        border-bottom: 1px solid red;
+      }
+    }
+  }
+}
+
+.btnGroup {
+  display: grid;
+  grid-row-gap: 40px;
+  grid-column-gap: 40px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 20px 40px;
+}

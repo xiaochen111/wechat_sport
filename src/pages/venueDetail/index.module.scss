@@ -1,0 +1,77 @@
+page {
+  margin-top: -1px;
+  background-color: #0d0d0d;
+}
+
+.swiper {
+  background-color: aquamarine;
+}
+
+.cantact {
+  padding: 20px;
+
+  view {
+    color: #fff;
+    font-size: 26px;
+    line-height: 1.8;
+  }
+}
+
+.listContainer {
+  padding: 20px;
+
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px;
+    color: #fff;
+    background-color: #404040;
+    border-radius: 10px;
+  }
+
+  .introLeft {
+    display: flex;
+    align-items: center;
+
+    image {
+      width: 100px;
+      height: 100px;
+    }
+
+    .intro {
+      margin-left: 20px;
+
+      .lession {
+        color: #fff;
+        font-size: 26px;
+        line-height: 1.8;
+      }
+
+      .datePrice {
+        color: yellow;
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+.lessionTitle {
+  color: #fff;
+  font-size: 36px;
+  line-height: 2;
+}
+
+.module {
+  margin-bottom: 20px;
+  padding: 20px;
+  color: #ccc;
+  background-color: #404040;
+  border-radius: 10px;
+
+  .lessionIntro {
+    font-size: 26px;
+    line-height: 1.8;
+  }
+}

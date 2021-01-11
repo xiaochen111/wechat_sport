@@ -1,0 +1,115 @@
+page {
+  //   background-color: #0d0d0d;
+  margin-top: -1px;
+}
+
+.swiper {
+  background-color: aquamarine;
+}
+
+.cantact {
+  padding: 20px;
+
+  view {
+    font-size: 26px;
+    line-height: 1.8;
+  }
+}
+
+.chioseModule {
+  padding: 20px;
+  color: #ccc;
+  background-color: #1a1a1a;
+
+  .chisoeOne {
+    margin-right: 30px;
+    font-size: 30px;
+
+    &.current {
+      color: #fff;
+      font-weight: bold;
+    }
+  }
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 10px;
+  background-color: #1a1a1a;
+
+  .tabItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    color: #fff;
+
+    .date {
+      margin-bottom: 10px;
+      color: #ccc;
+      font-size: 22px;
+
+      &.act {
+        color: #fff;
+      }
+    }
+
+    .title {
+      width: 50px;
+      height: 50px;
+      font-size: 28px;
+      line-height: 50px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+
+      &.act {
+        color: #fff;
+        border: 1px solid yellow;
+      }
+    }
+  }
+}
+
+.listContainer {
+  padding: 20px;
+  background-color: #404040;
+
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px;
+    color: #fff;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+  }
+
+  .introLeft {
+    display: flex;
+    align-items: center;
+
+    image {
+      width: 100px;
+      height: 100px;
+    }
+
+    .intro {
+      margin-left: 20px;
+
+      .lession {
+        color: #fff;
+        font-size: 26px;
+        line-height: 1.8;
+      }
+
+      .datePrice {
+        color: yellow;
+        font-size: 24px;
+      }
+    }
+  }
+}
