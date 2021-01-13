@@ -73,10 +73,6 @@ const VenuePage: Taro.FC = () => {
   );
 };
 
-Taro.setNavigationBarTitle({
-  title: "VENUE DEFTAIL",
-});
-
 Taro.setNavigationBarColor({
   frontColor: "#ffffff",
   backgroundColor: "#1a1a1a",

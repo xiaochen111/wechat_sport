@@ -2,7 +2,7 @@ import Taro from "@tarojs/taro";
 import { CoverView, CoverImage } from "@tarojs/components";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNav } from "../reducers/tabbar";
+import { setNav } from "src/reducers/tabbar";
 import "./index.scss";
 
 const navList: any[] = [
@@ -15,18 +15,18 @@ const navList: any[] = [
   {
     text: "管理",
     pagePath: "/pages/manager/index",
-    iconPath: "../images/order-icon.png",
-    selectedIconPath: "../images/order-icon-active.png",
+    iconPath: "../images/manager.png",
+    selectedIconPath: "../images/manager.png",
   },
   {
     text: "我的",
-    pagePath: "/pages/lessionDetail/index",
+    pagePath: "/pages/me/index",
     iconPath: "../images/my-icon.png",
     selectedIconPath: "../images/my-icon-active.png",
   },
 ];
 
-const CustomTabBar: Taro.FC = (props: any) => {
+const CustomTabBar: Taro.FC = () => {
   const [list, setList] = useState<any[]>(navList);
   const dispatch = useDispatch();
 

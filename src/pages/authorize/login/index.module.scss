@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  :global {
+    .at-form,
+    .at-grid__flex-item {
+      &::after {
+        border: none;
+      }
+    }
+  }
+}

@@ -1,10 +1,9 @@
 import { Image, Swiper, SwiperItem, Text, View } from "@tarojs/components";
-import React, { useState } from "react";
 import Taro from "@tarojs/taro";
-
+import React, { useState } from "react";
 import { AtButton } from "taro-ui";
-import Tabs from "./Tabs";
 import styles from "./index.module.scss";
+import Tabs from "./Tabs";
 
 const Trainer: Taro.FC = () => {
   return (
@@ -80,17 +79,17 @@ const ShopPage: Taro.FC = () => {
   );
 };
 
-Taro.setNavigationBarTitle({
-  title: "SHOP",
-});
+// Taro.setNavigationBarTitle({
+//   title: "SHOP",
+// });
 
-Taro.setNavigationBarColor({
-  frontColor: "#ffffff",
-  backgroundColor: "#1a1a1a",
-  animation: {
-    duration: 400,
-    timingFunc: "easeIn",
-  },
-});
+// Taro.setNavigationBarColor({
+//   frontColor: "#ffffff",
+//   backgroundColor: "#1a1a1a",
+//   animation: {
+//     duration: 400,
+//     timingFunc: "easeIn",
+//   },
+// });
 
 export default ShopPage;

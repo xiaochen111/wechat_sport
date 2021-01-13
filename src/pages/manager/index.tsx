@@ -1,11 +1,12 @@
 import { View } from "@tarojs/components";
-import React, { PureComponent } from "react";
+import React from "react";
 import Taro from "@tarojs/taro";
 import { AtList, AtListItem } from "taro-ui";
 
 const ManagerPage: Taro.FC = () => {
   const toManagerPage = (type: number) => {
     console.log("type: ", type);
+    Taro.navigateTo({ url: "/pages/manager/venue/index" });
   };
 
   return (

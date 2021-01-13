@@ -16,6 +16,7 @@ declare namespace JSX {
     "van-datetime-picker": any;
     "van-popup": any;
     "van-icon": any;
+    "van-area": any;
   }
 }
 

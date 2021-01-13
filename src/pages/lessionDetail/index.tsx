@@ -71,10 +71,6 @@ const CoachPage: Taro.FC = () => {
   );
 };
 
-Taro.setNavigationBarTitle({
-  title: "COACH DEFTAIL",
-});
-
 Taro.setNavigationBarColor({
   frontColor: "#ffffff",
   backgroundColor: "#1a1a1a",

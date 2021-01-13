@@ -1,10 +1,13 @@
 export default {
   pages: [
-    "pages/manager/venue/index",
-    "pages/manager/index",
     "pages/home/index",
-    "pages/venueDetail/index",
+    "pages/manager/venue/index",
     "pages/lessionDetail/index",
+    "pages/authorize/index",
+    "pages/authorize/login/index",
+    "pages/me/index",
+    "pages/manager/index",
+    "pages/venueDetail/index",
     "pages/shop/index",
     "pages/demo/index",
     "pages/index/index",
@@ -30,12 +33,12 @@ export default {
       {
         text: "管理",
         pagePath: "pages/manager/index",
-        iconPath: "images/order-icon.png",
-        selectedIconPath: "images/order-icon-active.png",
+        iconPath: "images/manager.png",
+        selectedIconPath: "images/manager.png",
       },
       {
         text: "我的",
-        pagePath: "pages/lessionDetail/index",
+        pagePath: "pages/me/index",
         iconPath: "images/my-icon.png",
         selectedIconPath: "images/my-icon-active.png",
       },

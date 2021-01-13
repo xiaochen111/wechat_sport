@@ -2,7 +2,6 @@ import { Image, ScrollView, Text, View } from "@tarojs/components";
 import React, { useState } from "react";
 import Taro from "@tarojs/taro";
 import { AtButton, AtTabBar } from "taro-ui";
-
 import styles from "./index.module.scss";
 
 const customStyle = "height: 60%; background:#1a1a1a; color:#fff;";
@@ -45,12 +44,16 @@ const HomePage: Taro.FC = () => {
       <ScrollView scrollY style={{ height: "calc(100vh - 96rpx)" }}>
         <View className={styles.scrollview}>
           {new Array(8).fill("").map((item: any, index: number) => (
-            <View className={styles.cardItem} key={index}>
+            <View
+              className={styles.cardItem}
+              key={index}
+              onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
+            >
               <Image
                 src={require("@/images/jianshen.jpg")}
                 style={{
                   width: "100%",
-                  height: "300rpx",
+                  height: "200rpx",
                   verticalAlign: "bottom",
                 }}
               />

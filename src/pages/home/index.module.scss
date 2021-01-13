@@ -20,6 +20,10 @@ page {
 }
 
 .scrollview {
+  display: grid;
+  grid-row-gap: 20px;
+  grid-column-gap: 20px;
+  grid-template-columns: 1fr 1fr;
   box-sizing: border-box;
   //   height: calc(100% - 92px);
   padding: 20px;

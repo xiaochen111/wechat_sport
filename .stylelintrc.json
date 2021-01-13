@@ -9,6 +9,7 @@
       "font-family-no-missing-generic-family-keyword": null,
       "no-empty-source": null,
       "value-keyword-case": null,
+      "unit-case": null,
       "selector-pseudo-class-no-unknown": [
         true,
         {

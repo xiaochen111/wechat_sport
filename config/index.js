@@ -22,7 +22,7 @@ const config = {
       // { from: 'src/components/vant-weapp/dist/common/style', to: 'dist/components/vant-weapp/dist/common/style' },
       // { from: 'src/components/vant-weapp/dist/common/index.wxss', to: 'dist/components/vant-weapp/dist/common/index.wxss' },
       // { from: 'src/components/vant-weapp/dist/calendar', to: 'dist/components/vant-weapp/dist/calendar' },
-      // { from: 'src/components/vant-weapp/dist/datetime-picker', to: 'dist/components/vant-weapp/dist/datetime-picker' },
+      { from: 'src/components/vant-weapp/dist/datetime-picker', to: 'dist/components/vant-weapp/dist/datetime-picker' },
       { from: 'src/components/vant-weapp/dist/picker-column', to: 'dist/components/vant-weapp/dist/picker-column' },
     ],
     options: {
