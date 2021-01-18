@@ -2,37 +2,14 @@ import Taro from "@tarojs/taro";
 import { CoverView, CoverImage } from "@tarojs/components";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNav } from "@/reducers/tabbar";
+import { setNav, TabbarStateType } from "@/reducers/tabbar";
 import "./index.scss";
 
-const navList: any[] = [
-  {
-    text: "首页",
-    pagePath: "/pages/home/index",
-    iconPath: "../images/order-icon.png",
-    selectedIconPath: "../images/order-icon-active.png",
-  },
-  {
-    text: "管理",
-    pagePath: "/pages/manager/index",
-    iconPath: "../images/manager.png",
-    selectedIconPath: "../images/manager.png",
-  },
-  {
-    text: "我的",
-    pagePath: "/pages/me/index",
-    iconPath: "../images/my-icon.png",
-    selectedIconPath: "../images/my-icon-active.png",
-  },
-];
-
 const CustomTabBar: Taro.FC = () => {
-  const [list, setList] = useState<any[]>(navList);
   const dispatch = useDispatch();
 
-  const tabber = useSelector((state) => state.tabber);
-  const { selected } = tabber;
-  console.log("selected: ", selected);
+  const tabber: TabbarStateType = useSelector((state) => state.tabber);
+  const { selected, tabList } = tabber;
 
   const switchTab = (item: any, index: number) => {
     dispatch({
@@ -50,7 +27,7 @@ const CustomTabBar: Taro.FC = () => {
   return (
     <CoverView className="tab-bar">
       <CoverView className="tab-bar-wrap">
-        {list.map((item, index) => {
+        {tabList.map((item, index) => {
           return (
             <CoverView
               className="tab-bar-wrap-item"
@@ -65,7 +42,7 @@ const CustomTabBar: Taro.FC = () => {
               <CoverView
                 className="tab-bar-wrap-item-btn"
                 style={{
-                  color: selected === index ? "#ed6c00" : "#666",
+                  color: selected === index ? "#333" : "#999",
                 }}
               >
                 {item.text}
@@ -83,3 +60,7 @@ const CustomTabBar: Taro.FC = () => {
   );
 };
 export default CustomTabBar;
+// export default connect(
+//   ({ tabbar }: any) => ({ tabbar }),
+//   (dispatch: Dispatch) => ({ dispatch })
+// )(CustomTabBar);

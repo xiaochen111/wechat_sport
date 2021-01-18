@@ -6,7 +6,8 @@ module.exports = {
     "jsx-quotes": 0,
     "import/first":0,
     "import/order":1,
-    "default-case":1
+    "default-case":1,
+    "import/no-commonjs":0
   },
   "plugins": ["prettier"],
 }
