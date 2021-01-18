@@ -1,6 +1,10 @@
 import { ADD, MINUS } from "../constants/counter";
 
-const INITIAL_STATE = {
+export interface Counter {
+  num: number;
+}
+
+const INITIAL_STATE: Counter = {
   num: 0,
 };
 

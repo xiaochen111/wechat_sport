@@ -2,7 +2,7 @@ import Taro from "@tarojs/taro";
 import { CoverView, CoverImage } from "@tarojs/components";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNav } from "src/reducers/tabbar";
+import { setNav } from "@/reducers/tabbar";
 import "./index.scss";
 
 const navList: any[] = [

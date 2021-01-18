@@ -1,6 +1,6 @@
 import { Slot, View } from "@tarojs/components";
-import React, { useState } from "react";
 import Taro from "@tarojs/taro";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Demo: Taro.FC = () => {

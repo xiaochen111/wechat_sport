@@ -5,7 +5,8 @@ module.exports = {
     "prettier/prettier": "error",
     "jsx-quotes": 0,
     "import/first":0,
-    "import/order":1
+    "import/order":1,
+    "default-case":1
   },
   "plugins": ["prettier"],
 }

@@ -36,3 +36,5 @@ declare const process: {
     [key: string]: any;
   };
 };
+
+// "dev:weapp": "NODE_ENV=production taro build --type weapp --watch",

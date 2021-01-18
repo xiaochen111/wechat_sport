@@ -1,31 +1,76 @@
 import { Image, ScrollView, Text, View } from "@tarojs/components";
-import React, { useState } from "react";
 import Taro from "@tarojs/taro";
+import React, { useState } from "react";
 import { AtButton, AtTabBar } from "taro-ui";
+import { useDispatch, useSelector, connect } from "react-redux";
+import { Dispatch } from "redux";
+import { HomeAction, HomeStateType, homeType } from "@/reducers/home";
 import styles from "./index.module.scss";
 
 const customStyle = "height: 60%; background:#1a1a1a; color:#fff;";
 
-const BtnGroup: Taro.FC<{ type: "area" | "type"; data: any[] }> = () => {
+type AreaItem = { name: string; id: number };
+const areaList: AreaItem[] = [
+  {
+    name: "浦东新区",
+    id: 0,
+  },
+  {
+    name: "杨浦",
+    id: 1,
+  },
+  {
+    name: "静安",
+    id: 2,
+  },
+  {
+    name: "嘉定",
+    id: 3,
+  },
+];
+
+const BtnGroup: Taro.FC<{
+  type: "area" | "type";
+  data: any[];
+}> = ({ data, type }) => {
+  const home: HomeStateType = useSelector((state) => state.home);
+  const dispatch = useDispatch();
+  const { currentArea } = home;
+
+  const handleBtn = (id: number) => {
+    if (type === "area") {
+      dispatch({
+        type: homeType.SET_CURRENT_AREA,
+        payload: {
+          currentArea: id,
+        },
+      } as HomeAction);
+    }
+  };
+
   return (
     <View className={styles.btnGroup}>
-      <AtButton type="secondary" size="small" full>
-        浦东新区
-      </AtButton>
-      <AtButton type="secondary" size="small" full>
-        杨浦
-      </AtButton>
-      <AtButton type="secondary" size="small" full>
-        静安
-      </AtButton>
-      <AtButton type="primary" size="small" full>
-        嘉定
-      </AtButton>
+      {data.map((item: AreaItem) => (
+        <AtButton
+          type={currentArea === item.id ? "primary" : "secondary"}
+          size="small"
+          full
+          key={item.id}
+          onClick={() => handleBtn(item.id)}
+        >
+          {item.name}
+        </AtButton>
+      ))}
     </View>
   );
 };
 
-const HomePage: Taro.FC = () => {
+const HomePage: Taro.FC<{
+  home: HomeStateType;
+  dispatch: Dispatch<any>;
+}> = ({ home, dispatch }) => {
+  const { list, currentArea } = home;
+
   const [show, setShow] = useState<boolean>(false);
   const [active, setActive] = useState<number>(0);
 
@@ -41,13 +86,15 @@ const HomePage: Taro.FC = () => {
         onClick={() => setShow(true)}
         current={3}
       />
-      <ScrollView scrollY style={{ height: "calc(100vh - 96rpx)" }}>
+      <ScrollView scrollY style={{ height: "calc(100vh - 96rpx - 110rpx)" }}>
         <View className={styles.scrollview}>
-          {new Array(8).fill("").map((item: any, index: number) => (
+          {list.map((item: any, index: number) => (
             <View
               className={styles.cardItem}
               key={index}
-              onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
+              // onClick={() => dispatch({ type: "ADD" } as AnyAction)}
+              onClick={() => dispatch({ type: homeType.SET_LIST })}
+              // onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
             >
               <Image
                 src={require("@/images/jianshen.jpg")}
@@ -94,23 +141,18 @@ const HomePage: Taro.FC = () => {
           </View>
         </View>
 
-        {active === 0 ? <BtnGroup type="area" data={[]} /> : <View>oop</View>}
+        {active === 0 ? (
+          <BtnGroup type="area" data={areaList} />
+        ) : (
+          <View>oop</View>
+        )}
       </van-popup>
     </View>
   );
 };
 
-// Taro.setNavigationBarTitle({
-//   title: "SUPERMONKEY",
-// });
-
-// Taro.setNavigationBarColor({
-//   frontColor: "#ffffff",
-//   backgroundColor: "#1a1a1a",
-//   animation: {
-//     duration: 400,
-//     timingFunc: "easeIn",
-//   },
-// });
-
-export default HomePage;
+export default connect(
+  ({ home }: any) => ({ home }),
+  (dispatch: Dispatch) => ({ dispatch })
+)(HomePage);
+// export default HomePage;
