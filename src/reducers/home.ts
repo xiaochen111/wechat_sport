@@ -9,7 +9,7 @@ export enum homeType {
 }
 
 interface PayloadType {
-  list?: [];
+  list?: any[];
   currentArea?: any;
 }
 

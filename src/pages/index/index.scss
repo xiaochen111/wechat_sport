@@ -2,3 +2,38 @@
   flex-direction: column;
   width: 100%;
 }
+
+@keyframes ldio-rpinwye8j0b {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ldio-rpinwye8j0b view {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  box-sizing: content-box;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  box-shadow: 0 4px 0 0 #e15b64;
+  transform-origin: 80px 82px;
+  animation: ldio-rpinwye8j0b 1s linear infinite;
+}
+
+.loadingio-eclipse {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+
+.ldio-rpinwye8j0b {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: translateZ(0) scale(1);
+  transform-origin: 0 0; /* see note above */
+  backface-visibility: hidden;
+}

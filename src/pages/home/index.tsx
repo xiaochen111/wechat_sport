@@ -93,8 +93,8 @@ const HomePage: Taro.FC<{
               className={styles.cardItem}
               key={index}
               // onClick={() => dispatch({ type: "ADD" } as AnyAction)}
-              onClick={() => dispatch({ type: homeType.SET_LIST })}
-              // onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
+              // onClick={() => dispatch({ type: homeType.SET_LIST })}
+              onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
             >
               <Image
                 src={require("@/images/jianshen.jpg")}

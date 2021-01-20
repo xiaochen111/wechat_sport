@@ -1,6 +1,6 @@
 import { View, Button, Text } from "@tarojs/components";
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 import { add, minus, asyncAdd } from "../../actions/counter";
 
 import "./index.scss";
@@ -19,6 +19,7 @@ type PageStateProps = {
   counter: {
     num: number;
   };
+  loadingReducer: any;
 };
 
 type PageDispatchProps = {
@@ -38,10 +39,11 @@ interface Index {
 }
 
 @connect(
-  ({ counter }) => ({
+  ({ counter, loadingReducer }) => ({
     counter,
+    loadingReducer,
   }),
-  (dispatch) => ({
+  (dispatch: Dispatch) => ({
     add() {
       console.log("add");
       dispatch(add());
@@ -51,7 +53,15 @@ interface Index {
       dispatch(minus());
     },
     asyncAdd() {
-      dispatch(asyncAdd());
+      // console.log("---");
+      // dispatch(asyncAdd(), {
+      //   name: "handelThunkALoading",
+      //   // takeType: "takeLatest",
+      // });
+      dispatch({
+        thunk: asyncAdd(),
+        name: "handelThunkALoading",
+      });
     },
   })
 )
@@ -67,6 +77,7 @@ class Index extends Component {
   componentDidHide() {}
 
   render() {
+    // console.log("reduxloadingState查看：", this.props.loadingReducer);
     return (
       <View className="index">
         <Button className="add_btn" onClick={this.props.add}>
@@ -75,7 +86,11 @@ class Index extends Component {
         <Button className="dec_btn" onClick={this.props.dec}>
           -
         </Button>
-        <Button className="dec_btn" onClick={this.props.asyncAdd}>
+        <Button
+          className="dec_btn"
+          onClick={this.props.asyncAdd}
+          loading={this.props.loadingReducer.handelThunkALoading}
+        >
           async
         </Button>
         <View>
@@ -83,6 +98,16 @@ class Index extends Component {
         </View>
         <View>
           <Text>Hello, World</Text>
+          <Text>
+            {this.props.loadingReducer.handelThunkALoading ? "true" : "false"}
+            {JSON.stringify(this.props.loadingReducer)}
+          </Text>
+        </View>
+
+        <View className="loadingio-eclipse">
+          <View className="ldio-rpinwye8j0b">
+            <View></View>
+          </View>
         </View>
       </View>
     );

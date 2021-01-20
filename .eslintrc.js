@@ -7,7 +7,7 @@ module.exports = {
     "import/first":0,
     "import/order":1,
     "default-case":1,
-    "import/no-commonjs":0
+    "import/no-commonjs":0,
   },
   "plugins": ["prettier"],
 }

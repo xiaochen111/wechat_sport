@@ -1,9 +1,9 @@
 export default {
   pages: [
+    "pages/authorize/index",
     "pages/home/index",
     "pages/manager/venue/index",
     "pages/lessionDetail/index",
-    "pages/authorize/index",
     "pages/authorize/login/index",
     "pages/me/index",
     "pages/manager/index",

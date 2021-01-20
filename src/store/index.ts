@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
+import { reduxThunkLoading } from "redux-thunk-loading";
 import rootReducer from "../reducers";
 
 const composeEnhancers =
@@ -10,7 +11,7 @@ const composeEnhancers =
       })
     : compose;
 
-const middlewares = [thunkMiddleware];
+const middlewares = [thunkMiddleware, reduxThunkLoading];
 
 if (
   process.env.NODE_ENV === "development" &&

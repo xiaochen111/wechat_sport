@@ -1,15 +1,14 @@
-import { Text, View } from "@tarojs/components";
+import { OpenData, View } from "@tarojs/components";
 import React from "react";
 import { AtButton, AtList, AtListItem } from "taro-ui";
-
 import styles from "./index.module.scss";
 
 const MePage: Taro.FC = () => {
   return (
     <View>
-      <View className={styles.avatar}>
-        <Text>头像</Text>
-        <Text>昵称</Text>
+      <View className={styles.avatarMain}>
+        <OpenData type="userAvatarUrl" className={styles.avatar} />
+        <OpenData type="userNickName" />
       </View>
       <View className={styles.meau}>
         <AtList>
