@@ -4,15 +4,31 @@ export enum setNav {
 
 export interface TabbarStateType {
   selected: number;
-  tabList: any[];
+  nomalTabList: any[];
+  mangerTabList: any[];
+  isManger: boolean;
 }
 
 const INITIAL_STATE: TabbarStateType = {
   selected: 0,
-  tabList: [
+  nomalTabList: [
     {
       text: "首页",
       pagePath: "/pages/home/index",
+      iconPath: "../images/home.png",
+      selectedIconPath: "../images/home-active.png",
+    },
+    {
+      text: "我的",
+      pagePath: "/pages/me/index",
+      iconPath: "../images/me.png",
+      selectedIconPath: "../images/me-active.png",
+    },
+  ],
+  mangerTabList: [
+    {
+      text: "首页",
+      pagePath: "/pages/syshome/index",
       iconPath: "../images/home.png",
       selectedIconPath: "../images/home-active.png",
     },
@@ -29,6 +45,7 @@ const INITIAL_STATE: TabbarStateType = {
       selectedIconPath: "../images/me-active.png",
     },
   ],
+  isManger: false,
 };
 
 export default function tabber(

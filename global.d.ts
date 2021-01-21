@@ -17,6 +17,9 @@ declare namespace JSX {
     "van-popup": any;
     "van-icon": any;
     "van-area": any;
+    "van-swipe-cell": any;
+    "van-dropdown-menu": any;
+    "van-dropdown-item": any;
   }
 }
 

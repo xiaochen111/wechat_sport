@@ -53,17 +53,10 @@ const initial = {};
 //把对数据的操作封装起来
 const reducer = (state, action: Action) => {
   const { type, payload } = action;
-  switch (type) {
-    case "changguan":
-      return {
-        ...state,
-        [type]: payload,
-      };
-    default:
-      return {
-        ...state,
-      };
-  }
+  return {
+    ...state,
+    [type]: payload,
+  };
 };
 
 const files = [

@@ -9,7 +9,7 @@ const CustomTabBar: Taro.FC = () => {
   const dispatch = useDispatch();
 
   const tabber: TabbarStateType = useSelector((state) => state.tabber);
-  const { selected, tabList } = tabber;
+  const { selected, nomalTabList, mangerTabList, isManger } = tabber;
 
   const switchTab = (item: any, index: number) => {
     dispatch({
@@ -23,11 +23,10 @@ const CustomTabBar: Taro.FC = () => {
   };
 
   // 自定义 tabBar的页面
-
   return (
     <CoverView className="tab-bar">
       <CoverView className="tab-bar-wrap">
-        {tabList.map((item, index) => {
+        {(isManger ? mangerTabList : nomalTabList).map((item, index) => {
           return (
             <CoverView
               className="tab-bar-wrap-item"
@@ -51,16 +50,7 @@ const CustomTabBar: Taro.FC = () => {
           );
         })}
       </CoverView>
-      {/* <CoverImage
-          className="intellect-icon"
-          src={Intellect}
-          onClick={this.jumpIntellect}
-        /> */}
     </CoverView>
   );
 };
 export default CustomTabBar;
-// export default connect(
-//   ({ tabbar }: any) => ({ tabbar }),
-//   (dispatch: Dispatch) => ({ dispatch })
-// )(CustomTabBar);

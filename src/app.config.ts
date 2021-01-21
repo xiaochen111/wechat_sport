@@ -1,7 +1,8 @@
 export default {
   pages: [
-    "pages/authorize/index",
     "pages/home/index",
+    "pages/authorize/index",
+    "pages/syshome/index",
     "pages/manager/venue/index",
     "pages/lessionDetail/index",
     "pages/authorize/login/index",
@@ -27,6 +28,12 @@ export default {
       {
         text: "订单",
         pagePath: "pages/home/index",
+        iconPath: "images/home.png",
+        selectedIconPath: "images/home-active.png",
+      },
+      {
+        text: "订单",
+        pagePath: "pages/syshome/index",
         iconPath: "images/home.png",
         selectedIconPath: "images/home-active.png",
       },

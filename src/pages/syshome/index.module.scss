@@ -1,0 +1,52 @@
+.sysHome {
+  :global {
+    .van-dropdown-menu {
+      border-bottom: 1PX solid #ccc;
+    }
+  }
+}
+
+.listItem {
+  border-bottom: 1PX solid #d6e4ef;
+
+  :global {
+    .van-swipe-cell__right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 130px;
+      color: #fff;
+      background-color: red;
+    }
+  }
+
+  .itemMain {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 20px;
+
+    image {
+      flex-shrink: 0;
+      width: 100px;
+      height: 100px;
+    }
+
+    .rightMain {
+      display: grid;
+      grid-row-gap: 20px;
+      grid-column-gap: 20px;
+      grid-template-columns: 1fr 1fr;
+      box-sizing: border-box;
+      width: 100%;
+      padding-left: 20px;
+      font-size: 26px;
+
+      view {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { Button, OpenData, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import { Button, Navigator, View } from "@tarojs/components";
+import Taro, { useDidShow } from "@tarojs/taro";
 import { asyncGetOpenIdAndSessionKey } from "@/actions/login";
 import React, { useEffect, useState } from "react";
 import { AtButton } from "taro-ui";
@@ -22,31 +22,48 @@ const AuthorizePage: Taro.FC = () => {
     });
   };
 
+  useDidShow(() => {
+    Taro.hideHomeButton({
+      success: () => {
+        console.log("success");
+      },
+      fail: () => {
+        console.log("fail");
+      },
+    });
+  });
+
   useEffect(() => {
-    Taro.getSetting({
-      success: (res: any) => {
-        if (res.authSetting["scope.userInfo"]) {
-          console.log("授权了");
-          const hasUserInfo = Taro.getStorageSync("userInfo");
-          if (hasUserInfo) {
-            Taro.switchTab({
-              url: "/pages/home/index",
-            });
-          } else {
-            Taro.login({
-              success: (e: any) => {
-                setCode(e.code);
-              },
-            });
-          }
-        } else {
-          console.log("没有授权");
-          Taro.login({
-            success: (e: any) => {
-              setCode(e.code);
-            },
-          });
-        }
+    // Taro.getSetting({
+    //   success: (res: any) => {
+    //     if (res.authSetting["scope.userInfo"]) {
+    //       console.log("授权了");
+    //       const hasUserInfo = Taro.getStorageSync("userInfo");
+    //       if (hasUserInfo) {
+    //         Taro.switchTab({
+    //           url: "/pages/home/index",
+    //         });
+    //       } else {
+    //         Taro.login({
+    //           success: (e: any) => {
+    //             setCode(e.code);
+    //           },
+    //         });
+    //       }
+    //     } else {
+    //       console.log("没有授权");
+    //       Taro.login({
+    //         success: (e: any) => {
+    //           setCode(e.code);
+    //         },
+    //       });
+    //     }
+    //   },
+    // });
+
+    Taro.login({
+      success: (e: any) => {
+        setCode(e.code);
       },
     });
   }, []);
@@ -63,9 +80,11 @@ const AuthorizePage: Taro.FC = () => {
         >
           微信授权登录
         </Button>
-        <AtButton type="primary" full>
-          管理员登录
-        </AtButton>
+        <Navigator url="/pages/authorize/login/index">
+          <AtButton type="primary" full>
+            管理员登录
+          </AtButton>
+        </Navigator>
       </View>
     </View>
   );

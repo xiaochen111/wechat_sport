@@ -1,3 +1,4 @@
+import Taro from "@tarojs/taro";
 import React, { Component } from "react";
 import { Provider } from "react-redux";
 import configStore from "./store";
@@ -6,7 +7,16 @@ import "./app.scss";
 const store = configStore();
 
 class App extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    Taro.getSetting({
+      success: (res: any) => {
+        if (!res.authSetting["scope.userInfo"]) {
+          console.log("没有授权了");
+          Taro.redirectTo({ url: "/pages/authorize/index" });
+        }
+      },
+    });
+  }
 
   componentDidShow() {}
 

@@ -74,6 +74,10 @@ const HomePage: Taro.FC<{
   const [show, setShow] = useState<boolean>(false);
   const [active, setActive] = useState<number>(0);
 
+  const onScrollToLower = () => {
+    console.log("onScrollToLower: ", onScrollToLower);
+  };
+
   return (
     <View className={styles.home}>
       <AtTabBar
@@ -86,7 +90,11 @@ const HomePage: Taro.FC<{
         onClick={() => setShow(true)}
         current={3}
       />
-      <ScrollView scrollY style={{ height: "calc(100vh - 96rpx - 110rpx)" }}>
+      <ScrollView
+        scrollY
+        onScrollToLower={onScrollToLower}
+        style={{ height: "calc(100vh - 96rpx - 110rpx)" }}
+      >
         <View className={styles.scrollview}>
           {list.map((item: any, index: number) => (
             <View

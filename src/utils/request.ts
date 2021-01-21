@@ -12,13 +12,31 @@ export const request = async (url: string, data?: object) => {
     "userInfo"
   );
   const header = userInfo ? { [userInfo.tokenKey]: userInfo.token } : {};
-  const res = await Taro.request({
-    url: baseUrl + url,
-    data,
-    method: "POST",
-    header,
-    // timeout: 10000,
-  });
 
-  return res.data;
+  try {
+    const res = await Taro.request({
+      url: baseUrl + url,
+      data,
+      method: "POST",
+      header,
+      // timeout: 10000,
+    });
+    const { data: response } = res;
+    if (!response.success) {
+      Taro.showToast({
+        title: "接口返回错误",
+        icon: "none",
+      });
+    }
+
+    return response;
+  } catch (error) {
+    // console.log("error: ", error);
+    Taro.showToast({
+      title: JSON.stringify(error),
+      icon: "none",
+    });
+  }
 };
+
+// http://yapi.ngroo.cn/ yapi地址 密码111111
