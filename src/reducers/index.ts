@@ -5,10 +5,14 @@ import tabber from "./tabbar";
 import home from "./home";
 import login from "./login";
 
-export default combineReducers({
+const combine = combineReducers({
   loadingReducer,
   counter,
   tabber,
   home,
   login,
 });
+
+export type CombineType = ReturnType<typeof combine>;
+
+export default combine;

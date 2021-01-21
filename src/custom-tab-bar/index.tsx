@@ -1,21 +1,28 @@
 import Taro from "@tarojs/taro";
 import { CoverView, CoverImage } from "@tarojs/components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNav, TabbarStateType } from "@/reducers/tabbar";
+import { setNav, TabbarStateType, TabbarAction } from "@/reducers/tabbar";
 import "./index.scss";
+import { CombineType } from "@/reducers";
 
 const CustomTabBar: Taro.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<TabbarAction>();
 
-  const tabber: TabbarStateType = useSelector((state) => state.tabber);
+  const tabber: TabbarStateType = useSelector(
+    (state: CombineType) => state.tabber
+  );
   const { selected, nomalTabList, mangerTabList, isManger } = tabber;
+
+  useEffect(() => {
+    console.log(0);
+  }, []);
 
   const switchTab = (item: any, index: number) => {
     dispatch({
       type: setNav.SET_CURRENT,
       payload: { selected: index },
-    });
+    } as TabbarAction);
     const url = item.pagePath;
     Taro.switchTab({
       url,

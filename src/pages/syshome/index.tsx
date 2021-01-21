@@ -3,17 +3,16 @@ import Taro from "@tarojs/taro";
 import React from "react";
 import styles from "./index.module.scss";
 
-const option = [
-  { text: "场馆", value: 0 },
-  { text: "课程", value: 1 },
-  { text: "私教", value: 2 },
-];
-
 const SysHome: Taro.FC = () => {
   const onChange = (e: any) => {
     console.log("value: ", e.detail);
   };
 
+  const option = [
+    { text: "场馆", value: 0 },
+    { text: "课程", value: 1 },
+    { text: "私教", value: 2 },
+  ];
   return (
     <View className={styles.sysHome}>
       <van-dropdown-menu>

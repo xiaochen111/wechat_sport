@@ -1,11 +1,29 @@
 export enum setNav {
+  /**
+   * 设置当前选中的tab
+   */
   SET_CURRENT = "SET_CURRENT",
+  /**
+   * 设置微信用户的tab or 管理员的tab
+   */
+  SET_TABBAR_STYLE = "SET_TABBAR_STYLE",
 }
 
+export interface TabbarAction {
+  type: setNav;
+  payload?: Partial<TabbarStateType>;
+}
+
+/**
+ * tab的redux数据
+ */
 export interface TabbarStateType {
   selected: number;
   nomalTabList: any[];
   mangerTabList: any[];
+  /**
+   * 是否是管理员的tabbar
+   */
   isManger: boolean;
 }
 
@@ -28,7 +46,7 @@ const INITIAL_STATE: TabbarStateType = {
   mangerTabList: [
     {
       text: "首页",
-      pagePath: "/pages/syshome/index",
+      pagePath: "/pages/home/index",
       iconPath: "../images/home.png",
       selectedIconPath: "../images/home-active.png",
     },
@@ -45,22 +63,23 @@ const INITIAL_STATE: TabbarStateType = {
       selectedIconPath: "../images/me-active.png",
     },
   ],
-  isManger: false,
+  isManger: true,
 };
 
-export default function tabber(
-  state = INITIAL_STATE,
-  action: { type: setNav; payload: any }
-) {
+export default function tabber(state = INITIAL_STATE, action: TabbarAction) {
   const { payload, type } = action;
 
   switch (type) {
     case setNav.SET_CURRENT:
       return {
         ...state,
-        selected: payload.selected,
+        selected: payload!.selected,
       };
-
+    case setNav.SET_TABBAR_STYLE:
+      return {
+        ...state,
+        selected: payload!.isManger,
+      };
     default:
       return state;
   }
