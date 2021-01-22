@@ -1,10 +1,10 @@
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import React, { useReducer, useState } from "react";
+import React, { useRef, useState } from "react";
 import { AtButton, AtForm, AtImagePicker, AtInput, AtTextarea } from "taro-ui";
 import styles from "./index.module.scss";
 
-type ChangeType =
+type VenueColoumn =
   | "changguan"
   | "shenshiqu"
   | "dizhi"
@@ -14,10 +14,8 @@ type ChangeType =
   | "fenlei"
   | "anfenjifei"
   | "shangchuantupian";
-type Action = {
-  type: ChangeType;
-  payload?: any;
-};
+
+type DataType = Record<VenueColoumn, any>;
 
 const areaList = {
   province_list: {
@@ -48,36 +46,31 @@ const areaList = {
 
 const customStyle = "background:#1a1a1a; color:#fff;";
 
-const initial = {};
-
-//把对数据的操作封装起来
-const reducer = (state, action: Action) => {
-  const { type, payload } = action;
-  return {
-    ...state,
-    [type]: payload,
-  };
-};
-
 const files = [
   {
     url: "https://pic.cnblogs.com/face/1846701/20191026145415.png",
   },
 ];
 const VenuePage: Taro.FC = () => {
-  const [state, dispatch] = useReducer(reducer, initial);
+  const paramRef = useRef<DataType>({} as DataType);
   const [show, setShow] = useState<boolean>(false);
   const [isDatePopup, setIsDatePopup] = useState<boolean>(true);
 
-  const handleChange = (value: any, type: ChangeType) => {
-    // console.log("type: ", type);
-    // console.log("value: ", value);
-    dispatch({ type, payload: value });
+  const handleChange = (value: any, coloum: VenueColoumn) => {
+    paramRef.current[coloum] = value;
   };
 
   const openPopup = (type: "Date" | "City") => {
     setShow(true);
     setIsDatePopup(type === "Date");
+  };
+
+  const selectCurrentValue = (
+    coloum: "shenshiqu" | "yunyinshijian",
+    value: any
+  ) => {
+    setShow(false);
+    paramRef.current[coloum] = value;
   };
 
   return (
@@ -158,7 +151,9 @@ const VenuePage: Taro.FC = () => {
         {isDatePopup ? (
           <van-datetime-picker
             type="datetime"
-            onconfirm={(e: any) => console.log(e.detail)}
+            onconfirm={(e: any) =>
+              selectCurrentValue("yunyinshijian", e.detail)
+            }
             value={new Date().getTime()}
             oncancel={() => setShow(false)}
           />
@@ -166,7 +161,9 @@ const VenuePage: Taro.FC = () => {
           <van-area
             areaList={areaList}
             oncancel={() => setShow(false)}
-            onconfirm={(e: any) => console.log(e.detail.values)}
+            onconfirm={(e: any) =>
+              selectCurrentValue("shenshiqu", e.detail.values)
+            }
           />
         )}
       </van-popup>

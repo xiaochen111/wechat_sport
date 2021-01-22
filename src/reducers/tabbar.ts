@@ -1,3 +1,6 @@
+/**
+ * tabbar action type 类型
+ */
 export enum setNav {
   /**
    * 设置当前选中的tab
@@ -18,12 +21,11 @@ export interface TabbarAction {
  * tab的redux数据
  */
 export interface TabbarStateType {
+  /**当前选中第几个 */
   selected: number;
   nomalTabList: any[];
   mangerTabList: any[];
-  /**
-   * 是否是管理员的tabbar
-   */
+  /** 是否是管理员的tabbar*/
   isManger: boolean;
 }
 
@@ -63,7 +65,7 @@ const INITIAL_STATE: TabbarStateType = {
       selectedIconPath: "../images/me-active.png",
     },
   ],
-  isManger: true,
+  isManger: false,
 };
 
 export default function tabber(state = INITIAL_STATE, action: TabbarAction) {
@@ -78,7 +80,7 @@ export default function tabber(state = INITIAL_STATE, action: TabbarAction) {
     case setNav.SET_TABBAR_STYLE:
       return {
         ...state,
-        selected: payload!.isManger,
+        isManger: payload!.isManger,
       };
     default:
       return state;

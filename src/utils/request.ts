@@ -1,13 +1,27 @@
 import Taro from "@tarojs/taro";
 
-const baseUrl = "http://192.168.3.32:8082";
+const baseUrl = "http://192.168.3.41:8082";
+
+interface ResopnseType {
+  /**返回信息 */
+  msg: string;
+  /**返回状态码 */
+  code: number;
+  /**返回是否成功 */
+  success: boolean;
+  /**返回对象 */
+  result: any;
+}
 
 /**
  *
  * @param url 接口路径
  * @param data 接口参数
  */
-export const request = async (url: string, data?: object) => {
+export const request = async (
+  url: string,
+  data?: object
+): Promise<ResopnseType> => {
   const userInfo: { tokenKey: string; token: string } = Taro.getStorageSync(
     "userInfo"
   );
@@ -24,7 +38,7 @@ export const request = async (url: string, data?: object) => {
     const { data: response } = res;
     if (!response.success) {
       Taro.showToast({
-        title: "接口返回错误",
+        title: response.msg || "接口返回错误",
         icon: "none",
       });
     }
@@ -36,6 +50,7 @@ export const request = async (url: string, data?: object) => {
       title: JSON.stringify(error),
       icon: "none",
     });
+    return {} as ResopnseType;
   }
 };
 
