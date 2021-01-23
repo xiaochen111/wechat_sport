@@ -4,6 +4,7 @@ import counter from "./counter";
 import tabber from "./tabbar";
 import home from "./home";
 import login from "./login";
+import venue from "./manger/venue";
 
 const combine = combineReducers({
   loadingReducer,
@@ -11,6 +12,7 @@ const combine = combineReducers({
   tabber,
   home,
   login,
+  venue,
 });
 
 export type CombineType = ReturnType<typeof combine>;

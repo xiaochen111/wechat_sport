@@ -1,6 +1,7 @@
 import Taro from "@tarojs/taro";
 
-const baseUrl = "http://192.168.3.41:8082";
+// const baseUrl = "http://192.168.3.41:8082"; // 登录。授权
+const baseUrl = "http://192.168.3.41:8877"; // 登录。授权
 
 interface ResopnseType {
   /**返回信息 */
@@ -55,3 +56,41 @@ export const request = async (
 };
 
 // http://yapi.ngroo.cn/ yapi地址 密码111111
+/**
+ * 文件上传
+ * @param url
+ * @param data
+ */
+export const fileUploadRequest = async (
+  url: string,
+  data: any
+): Promise<ResopnseType> => {
+  const userInfo: { tokenKey: string; token: string } = Taro.getStorageSync(
+    "userInfo"
+  );
+  const header = {
+    ...(userInfo ? { [userInfo.tokenKey]: userInfo.token } : {}),
+    "content-type": "multipart/form-data",
+  };
+
+  try {
+    const res: {
+      data: any;
+      statusCode: number;
+      errMsg: string;
+    } = await Taro.uploadFile({
+      url: baseUrl + url,
+      filePath: data.file,
+      name: "file",
+      header,
+    });
+
+    return JSON.parse(res.data);
+  } catch (error) {
+    Taro.showToast({
+      title: JSON.stringify(error),
+      icon: "none",
+    });
+    return {} as ResopnseType;
+  }
+};

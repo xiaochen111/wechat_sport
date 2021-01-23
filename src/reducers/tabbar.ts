@@ -12,6 +12,7 @@ export enum setNav {
   SET_TABBAR_STYLE = "SET_TABBAR_STYLE",
 }
 
+/** dispatch 参数类型 */
 export interface TabbarAction {
   type: setNav;
   payload?: Partial<TabbarStateType>;

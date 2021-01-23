@@ -64,6 +64,5 @@ export const doLogin = (params: UserInfo) => async (dispatch: Dispatch) => {
     Taro.switchTab({
       url: "/pages/home/index",
     });
-    console.log(isAdmin === identities.isManger);
   }
 };
