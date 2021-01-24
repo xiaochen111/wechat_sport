@@ -20,6 +20,7 @@ declare namespace JSX {
     "van-swipe-cell": any;
     "van-dropdown-menu": any;
     "van-dropdown-item": any;
+    "van-picker": any;
   }
 }
 

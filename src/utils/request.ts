@@ -1,7 +1,8 @@
 import Taro from "@tarojs/taro";
 
 // const baseUrl = "http://192.168.3.41:8082"; // 登录。授权
-const baseUrl = "http://192.168.3.41:8877"; // 登录。授权
+// const baseUrl = "http://192.168.3.41:8877"; // 场馆
+const baseUrl = "http://gym.ngroo.cn"; // 场馆
 
 interface ResopnseType {
   /**返回信息 */

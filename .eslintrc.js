@@ -8,6 +8,7 @@ module.exports = {
     "import/order":1,
     "default-case":1,
     "import/no-commonjs":0,
+    "react-hooks/exhaustive-deps":0
   },
   "plugins": ["prettier"],
 }

@@ -3,6 +3,7 @@ export default {
     "pages/home/index",
     "pages/authorize/index",
     "pages/manager/venue/index",
+    "pages/manager/lession/index",
     "pages/lessionDetail/index",
     "pages/authorize/login/index",
     "pages/me/index",

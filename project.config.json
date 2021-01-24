@@ -63,6 +63,18 @@
         {
           "name": "pages/manager/venue/index",
           "pathName": "pages/manager/venue/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/manager/lession/index",
+          "pathName": "pages/manager/lession/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/authorize/login/index",
+          "pathName": "pages/authorize/login/index",
           "scene": null
         }
       ]

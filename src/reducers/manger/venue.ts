@@ -1,6 +1,5 @@
 export type VenueColoumn =
   | "name"
-  | "shenshiqu"
   | "province"
   | "city"
   | "district"
@@ -11,10 +10,25 @@ export type VenueColoumn =
   | "describe"
   | "gymType"
   | "files"
-  | "chargingType"
-  | "shangchuantupian";
+  | "chargingType";
 
 type VenueDateType = Record<VenueColoumn, any>;
+/**校验字端 */
+type VenueDateRequire = Record<VenueColoumn, { errMsg: string; patter?: any }>;
+export const checkColoumns: VenueDateRequire = {
+  name: { errMsg: "场馆不能为空" },
+  province: { errMsg: "省不能为空" },
+  city: { errMsg: "市不能为空" },
+  district: { errMsg: "区不能为空" },
+  address: { errMsg: "地址不能为空" },
+  tel: { errMsg: "电话不能为空" },
+  startTime: { errMsg: "开始时间不能为空" },
+  endTime: { errMsg: "介绍时间不能为空" },
+  describe: { errMsg: "场地介绍不能为空" },
+  gymType: { errMsg: "场馆类型不能为空" },
+  files: { errMsg: "场馆图片不能为空" },
+  chargingType: { errMsg: "计费类型不能为空" },
+};
 
 /**场馆数据类型 */
 export interface VenueStateType {
@@ -51,8 +65,11 @@ export default function venue(state = initialState, action: VenueAction) {
       return {
         ...state,
         venueData: {
-          ...state,
-          venueData: [...state.venueData.files, ...payload!.venueData!.files!],
+          ...state.venueData,
+          files: [
+            ...(state.venueData.files ?? []),
+            ...payload?.venueData!.files,
+          ],
         },
       };
     case VenueType.DELETE_PIC:

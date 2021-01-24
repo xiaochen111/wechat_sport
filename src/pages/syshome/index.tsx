@@ -1,9 +1,17 @@
 import { Image, Slot, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import React from "react";
+import { getDictData } from "@/actions/global";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./index.module.scss";
 
 const SysHome: Taro.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // getInitDictDate();
+  }, []);
+
   const onChange = (e: any) => {
     console.log("value: ", e.detail);
   };

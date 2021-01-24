@@ -1,5 +1,5 @@
 import { VenueAction, VenueType } from "@/reducers/manger/venue";
-import { fileUploadRequest } from "@/utils/request";
+import { fileUploadRequest, request } from "@/utils/request";
 import { Dispatch } from "redux";
 
 /**
@@ -13,13 +13,28 @@ export const fileUplad = (params: { file: string }) => async (
   console.log("res: ", res);
   const {
     success,
-    result: { fileAllPath },
+    result: { fileAllPath, id },
   } = res;
 
   if (success) {
     dispatch({
       type: VenueType.SET_PIC,
-      payload: { venueData: { files: [{ url: fileAllPath }] } },
+      payload: { venueData: { files: [{ url: fileAllPath, id }] } },
     } as VenueAction);
+  }
+};
+
+/**
+ * 添加场馆
+ */
+export const addVenue = (params: any) => async () => {
+  const res = await request("/gym/venueForAdmin/addVenue.admin", params);
+  const { success, result } = res;
+  if (success) {
+    console.log("添加成功");
+    Taro.showToast({
+      title: "添加成功",
+      icon: "success",
+    });
   }
 };

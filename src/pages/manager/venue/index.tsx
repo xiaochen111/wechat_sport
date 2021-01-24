@@ -1,20 +1,35 @@
 import { View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
-import React, { useState } from "react";
-import { AtButton, AtForm, AtImagePicker, AtInput, AtTextarea } from "taro-ui";
+import Taro, { atMessage } from "@tarojs/taro";
+import React, { useEffect, useState } from "react";
+import {
+  AtButton,
+  AtForm,
+  AtImagePicker,
+  AtInput,
+  AtMessage,
+  AtTextarea,
+} from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { fileUplad } from "@/actions/manger/venue";
+import { addVenue, fileUplad } from "@/actions/manger/venue";
 import { CombineType } from "@/reducers";
 import {
   VenueAction,
   VenueColoumn,
   VenueStateType,
   VenueType,
+  checkColoumns,
 } from "@/reducers/manger/venue";
 import dayjs from "dayjs";
+import { getDictData } from "@/actions/global";
+import { dictKeyName, GlobalStateType } from "@/reducers/global";
 import styles from "./index.module.scss";
 
-type NeedSet = "endTime" | "startTime" | "shenshiqu";
+type NeedSet =
+  | "endTime"
+  | "startTime"
+  | "shenshiqu"
+  | "jifeileixing"
+  | "gymType";
 type NeedSetMap = Record<NeedSet, any>;
 
 const areaList = {
@@ -46,16 +61,29 @@ const areaList = {
 
 const customStyle = "background:#1a1a1a; color:#fff;";
 
+const columns = ["分钟", "小时"];
+
 const VenuePage: Taro.FC = () => {
   const [show, setShow] = useState<boolean>(false);
   const [isDatePopup, setIsDatePopup] = useState<NeedSet>("startTime");
   const [selectData, setSelectData] = useState<NeedSetMap>({} as NeedSetMap);
 
-  const venue: VenueStateType = useSelector(
-    (state: CombineType) => state.venue
-  );
+  const state: CombineType = useSelector((s: CombineType) => s);
+  const venue: VenueStateType = state.venue;
+  const loadingReducer: any = state.loadingReducer;
+  const gloablData: GlobalStateType = state.global;
+
+  const { dictData } = gloablData;
+  console.log("dictData: ", dictData[dictKeyName.GYM_TYPE]);
+
   const dispatch = useDispatch();
   const { venueData } = venue;
+
+  useEffect(() => {
+    dispatch({
+      thunk: getDictData(),
+    });
+  }, []);
 
   // 输入时赋值
   const handleChange = (value: any, coloum: VenueColoumn, type?: "upload") => {
@@ -117,8 +145,23 @@ const VenuePage: Taro.FC = () => {
         setSelectData({ ...selectData, [coloum]: date });
         dispatch({
           type: VenueType.SET_VALUE,
-          payload: { coloum, value },
+          payload: { coloum, value: date },
         } as VenueAction);
+        break;
+      case "jifeileixing":
+        console.log(value);
+        const currentValue = value.value === "分钟" ? 1 : 2;
+        dispatch({
+          type: VenueType.SET_VALUE,
+          payload: { coloum: "chargingType", value: currentValue },
+        } as VenueAction);
+        break;
+      case "gymType":
+        dispatch({
+          type: VenueType.SET_VALUE,
+          payload: { coloum, value: value.value },
+        } as VenueAction);
+        break;
       default:
         dispatch({
           type: VenueType.SET_VALUE,
@@ -128,11 +171,29 @@ const VenuePage: Taro.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log(venueData);
+    let isChecked: boolean = true;
+    const keysList = Object.keys(checkColoumns);
+    for (let index = 0; index < keysList.length; index++) {
+      const key = keysList[index];
+      if (!venueData[key]) {
+        atMessage({ message: checkColoumns[key].errMsg });
+        isChecked = false;
+        break;
+      }
+    }
+
+    if (isChecked) {
+      venueData.files = venueData.files.map((item: any) => item.id);
+      dispatch({
+        thunk: addVenue(venueData),
+        name: "addVenueLoading",
+      });
+    }
   };
 
   return (
     <View className={styles.formModule}>
+      <AtMessage />
       <AtForm>
         <AtInput
           name="name"
@@ -191,16 +252,22 @@ const VenuePage: Taro.FC = () => {
         </View>
         <AtInput
           name="gymType"
-          title="分类"
+          title="场馆类型"
+          value={venueData.gymType}
+          editable={false}
           type="text"
-          onChange={(value) => handleChange(value, "gymType")}
+          onClick={() => openPopup("gymType")}
+          onChange={() => {}}
+          // onChange={(value) => handleChange(value, "gymType")}
         />
         <AtInput
           name="chargingType"
-          title="按分计费"
+          title="计费类型"
           type="text"
-          value={venueData.chargingType}
-          onChange={(value) => handleChange(value, "chargingType")}
+          editable={false}
+          value={venueData.chargingType === 1 ? "分钟" : "小时"}
+          onClick={() => openPopup("jifeileixing")}
+          onChange={() => {}}
         />
         <View style={{ padding: 10 }}>
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>上传图片</View>
@@ -210,7 +277,7 @@ const VenuePage: Taro.FC = () => {
             onChange={(fileList: any[], operationType: string, index: number) =>
               handleChange(
                 { fileList, operationType, index },
-                "shangchuantupian",
+                "files",
                 "upload"
               )
             }
@@ -220,6 +287,7 @@ const VenuePage: Taro.FC = () => {
           onClick={handleSubmit}
           customStyle={{ margin: 10 }}
           type="primary"
+          loading={loadingReducer.addVenueLoading}
         >
           提交
         </AtButton>
@@ -232,20 +300,42 @@ const VenuePage: Taro.FC = () => {
         customStyle={customStyle}
         onclose={() => setShow(false)}
       >
-        {isDatePopup === "startTime" || isDatePopup === "endTime" ? (
+        {(isDatePopup === "startTime" || isDatePopup === "endTime") && (
           <van-datetime-picker
             type="datetime"
             onconfirm={(e: any) => selectCurrentValue(isDatePopup, e.detail)}
             value={new Date().getTime()}
             oncancel={() => setShow(false)}
           />
-        ) : (
+        )}
+
+        {isDatePopup === "shenshiqu" && (
           <van-area
             areaList={areaList}
             oncancel={() => setShow(false)}
             onconfirm={(e: any) =>
               selectCurrentValue("shenshiqu", e.detail.values)
             }
+          />
+        )}
+
+        {isDatePopup === "jifeileixing" && (
+          <van-picker
+            columns={columns}
+            showToolbar
+            oncancel={() => setShow(false)}
+            onconfirm={(e: any) => selectCurrentValue("jifeileixing", e.detail)}
+          />
+        )}
+
+        {isDatePopup === "gymType" && (
+          <van-picker
+            columns={(dictData[dictKeyName.GYM_TYPE] as any[]).map(
+              (item: any) => item.value
+            )}
+            showToolbar
+            oncancel={() => setShow(false)}
+            onconfirm={(e: any) => selectCurrentValue("gymType", e.detail)}
           />
         )}
       </van-popup>
