@@ -16,11 +16,10 @@ import dayjs from "dayjs";
 import {
   LessionAction,
   LessionActionType,
-  LessionAllStateType,
   LessionKeys,
-  LessionStateType,
 } from "@/reducers/manger/lession";
 import styles from "./index.module.scss";
+import CombineVenue from "./combineVenue";
 
 type NeedSet = "endTime" | "startTime" | "shenshiqu";
 type NeedSetMap = Record<NeedSet, any>;
@@ -29,14 +28,15 @@ const customStyle = "background:#1a1a1a; color:#fff;";
 
 const LessionPage: Taro.FC = () => {
   const [show, setShow] = useState<boolean>(false);
+  const [showVenue, setShowVenue] = useState<boolean>(false);
   const [isDatePopup, setIsDatePopup] = useState<NeedSet>("startTime");
   const [selectData, setSelectData] = useState<NeedSetMap>({} as NeedSetMap);
 
-  const lession: LessionAllStateType = useSelector(
-    (state: CombineType) => state.lession
-  );
+  const state: CombineType = useSelector((s) => s);
   const dispatch = useDispatch();
-  const lessionData: LessionStateType = lession.lessionData;
+  const lession = state.lession;
+  const managerIndex = state.managerIndex;
+  const { lessionData } = lession;
 
   // 输入时赋值
   const handleChange = (value: any, coloum: LessionKeys, type?: "upload") => {
@@ -45,7 +45,7 @@ const LessionPage: Taro.FC = () => {
       if (operationType === "add") {
         const currentUploadItem = fileList[fileList.length - 1];
         dispatch({
-          thunk: fileUplad({ file: currentUploadItem.url }),
+          thunk: fileUplad({ file: currentUploadItem.url }, "list"),
           name: "uploadFileLoad",
         });
       } else {
@@ -66,8 +66,11 @@ const LessionPage: Taro.FC = () => {
   };
 
   const openPopup = (type: NeedSet) => {
-    setShow(true);
-    setIsDatePopup(type);
+    // 有点击穿透的bug
+    if (!showVenue) {
+      setShow(true);
+      setIsDatePopup(type);
+    }
   };
 
   // 选中赋值
@@ -97,6 +100,15 @@ const LessionPage: Taro.FC = () => {
   return (
     <View className={styles.formModule}>
       <AtForm>
+        <AtInput
+          name="startTime"
+          title="关联场馆"
+          type="text"
+          value={selectData.startTime}
+          editable={false}
+          onClick={() => setShowVenue(true)}
+          onChange={() => {}}
+        />
         <AtInput
           name="name"
           title="课程名称"
@@ -201,6 +213,16 @@ const LessionPage: Taro.FC = () => {
           value={new Date().getTime()}
           oncancel={() => setShow(false)}
         />
+      </van-popup>
+
+      {/* 关联场馆弹窗 */}
+      <van-popup
+        show={showVenue}
+        position="bottom"
+        customStyle={customStyle}
+        onclose={() => setShowVenue(false)}
+      >
+        <CombineVenue list={managerIndex.venueList} />
       </van-popup>
     </View>
   );

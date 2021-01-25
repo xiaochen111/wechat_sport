@@ -89,7 +89,7 @@ export default function lession(state = initialState, action: LessionAction) {
         ...state,
         lessionData: {
           ...state.lessionData,
-          mainPic: "",
+          mainPic: [],
         },
       };
     case LessionActionType.SET_FILES_PIC:

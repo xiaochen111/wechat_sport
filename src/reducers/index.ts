@@ -7,6 +7,7 @@ import login from "./login";
 import venue from "./manger/venue";
 import lession from "./manger/lession";
 import global from "./global";
+import managerIndex from "./manger/indexManger";
 
 const combine = combineReducers({
   loadingReducer,
@@ -17,6 +18,7 @@ const combine = combineReducers({
   venue,
   lession,
   global,
+  managerIndex,
 });
 
 export type CombineType = ReturnType<typeof combine>;

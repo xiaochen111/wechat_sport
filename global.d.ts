@@ -21,6 +21,7 @@ declare namespace JSX {
     "van-dropdown-menu": any;
     "van-dropdown-item": any;
     "van-picker": any;
+    "van-search": any;
   }
 }
 
@@ -42,3 +43,4 @@ declare const process: {
 };
 
 // "dev:weapp": "NODE_ENV=production taro build --type weapp --watch",
+// "dev:weapp": "npm run build:weapp -- --watch",

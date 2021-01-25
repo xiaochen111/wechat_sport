@@ -18,10 +18,12 @@ import {
   VenueStateType,
   VenueType,
   checkColoumns,
+  JyObj,
 } from "@/reducers/manger/venue";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { getDictData } from "@/actions/global";
 import { dictKeyName, GlobalStateType } from "@/reducers/global";
+import { cloneDeep } from "lodash";
 import styles from "./index.module.scss";
 
 type NeedSet =
@@ -73,9 +75,6 @@ const VenuePage: Taro.FC = () => {
   const loadingReducer: any = state.loadingReducer;
   const gloablData: GlobalStateType = state.global;
 
-  const { dictData } = gloablData;
-  console.log("dictData: ", dictData[dictKeyName.GYM_TYPE]);
-
   const dispatch = useDispatch();
   const { venueData } = venue;
 
@@ -92,16 +91,26 @@ const VenuePage: Taro.FC = () => {
       if (operationType === "add") {
         const currentUploadItem = fileList[fileList.length - 1];
         dispatch({
-          thunk: fileUplad({ file: currentUploadItem.url }),
-          name: "uploadFileLoad",
+          thunk: fileUplad(
+            { file: currentUploadItem.url },
+            coloum === "files" ? "list" : "main"
+          ),
+          name: "imgUploading",
         });
       } else {
         // atImagePicker组件bug 删除时使用延时解决上传不会触发选择事件
         setTimeout(() => {
-          dispatch({
-            type: VenueType.DELETE_PIC,
-            payload: { index },
-          } as VenueAction);
+          if (coloum === "files") {
+            dispatch({
+              type: VenueType.DELETE_PIC,
+              payload: { index },
+            } as VenueAction);
+          }
+          if (coloum === "mainPic") {
+            dispatch({
+              type: VenueType.DELETE_VENUN_MAIN_PIC,
+            });
+          }
         });
       }
     } else {
@@ -113,8 +122,11 @@ const VenuePage: Taro.FC = () => {
   };
 
   const openPopup = (type: NeedSet) => {
-    setShow(true);
-    setIsDatePopup(type);
+    // 点击弹窗穿透bug
+    if (!show) {
+      setShow(true);
+      setIsDatePopup(type);
+    }
   };
 
   // 选中赋值
@@ -141,11 +153,12 @@ const VenuePage: Taro.FC = () => {
         break;
       case "startTime":
       case "endTime":
-        const date = dayjs(value).format("YYYY-MM-DD hh:mm");
-        setSelectData({ ...selectData, [coloum]: date });
+        console.log(value);
+        // const date = dayjs(value).format("YYYY-MM-DD hh:mm");
+        setSelectData({ ...selectData, [coloum]: value });
         dispatch({
           type: VenueType.SET_VALUE,
-          payload: { coloum, value: date },
+          payload: { coloum, value },
         } as VenueAction);
         break;
       case "jifeileixing":
@@ -175,17 +188,36 @@ const VenuePage: Taro.FC = () => {
     const keysList = Object.keys(checkColoumns);
     for (let index = 0; index < keysList.length; index++) {
       const key = keysList[index];
+      const checkedObj = checkColoumns[key] as JyObj;
       if (!venueData[key]) {
-        atMessage({ message: checkColoumns[key].errMsg });
+        atMessage({ message: checkedObj.errMsg });
         isChecked = false;
         break;
+      }
+      if (checkedObj.patter?.rege) {
+        const res = checkedObj.patter?.rege?.test(venueData[key]);
+        if (!res) {
+          atMessage({ message: checkedObj.patter?.msg });
+          isChecked = false;
+          break;
+        }
+      }
+      if (checkedObj.patter?.fn) {
+        const res = checkedObj.patter?.fn(venueData[key]);
+        if (!res) {
+          atMessage({ message: checkedObj.patter?.msg });
+          isChecked = false;
+          break;
+        }
       }
     }
 
     if (isChecked) {
-      venueData.files = venueData.files.map((item: any) => item.id);
+      const cloneData = cloneDeep(venueData);
+      cloneData.files = cloneData.files.map((item: any) => item.id);
+      cloneData.mainPic = cloneData.mainPic[0].id;
       dispatch({
-        thunk: addVenue(venueData),
+        thunk: addVenue(cloneData),
         name: "addVenueLoading",
       });
     }
@@ -246,8 +278,8 @@ const VenuePage: Taro.FC = () => {
         <View style={{ padding: 10 }}>
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>场地介绍</View>
           <AtTextarea
-            value={venueData.describe}
-            onChange={(value) => handleChange(value, "describe")}
+            value={venueData.description}
+            onChange={(value) => handleChange(value, "description")}
           />
         </View>
         <AtInput
@@ -258,21 +290,40 @@ const VenuePage: Taro.FC = () => {
           type="text"
           onClick={() => openPopup("gymType")}
           onChange={() => {}}
-          // onChange={(value) => handleChange(value, "gymType")}
         />
         <AtInput
           name="chargingType"
           title="计费类型"
           type="text"
           editable={false}
-          value={venueData.chargingType === 1 ? "分钟" : "小时"}
+          value={
+            (venueData.chargingType === 1 && "分钟") ||
+            (venueData.chargingType === 2 && "小时") ||
+            ""
+          }
           onClick={() => openPopup("jifeileixing")}
           onChange={() => {}}
         />
         <View style={{ padding: 10 }}>
+          <View style={{ lineHeight: 2, paddingLeft: 5 }}>主图片</View>
+          <AtImagePicker
+            files={venueData.mainPic}
+            showAddBtn={!(venueData.mainPic?.length === 1)}
+            multiple={false}
+            onChange={(fileList: any[], operationType: string, index: number) =>
+              handleChange(
+                { fileList, operationType, index },
+                "mainPic",
+                "upload"
+              )
+            }
+          />
+        </View>
+        <View style={{ padding: 10 }}>
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>上传图片</View>
           <AtImagePicker
             files={venueData.files}
+            // showAddBtn={!loadingReducer.uploadFileLoad}
             multiple={false}
             onChange={(fileList: any[], operationType: string, index: number) =>
               handleChange(
@@ -302,9 +353,11 @@ const VenuePage: Taro.FC = () => {
       >
         {(isDatePopup === "startTime" || isDatePopup === "endTime") && (
           <van-datetime-picker
-            type="datetime"
+            type="time"
+            minHour={0}
+            maxHour={23}
             onconfirm={(e: any) => selectCurrentValue(isDatePopup, e.detail)}
-            value={new Date().getTime()}
+            value="12:00"
             oncancel={() => setShow(false)}
           />
         )}
@@ -330,7 +383,7 @@ const VenuePage: Taro.FC = () => {
 
         {isDatePopup === "gymType" && (
           <van-picker
-            columns={(dictData[dictKeyName.GYM_TYPE] as any[]).map(
+            columns={(gloablData.dictData[dictKeyName.GYM_TYPE] as any[])?.map(
               (item: any) => item.value
             )}
             showToolbar
