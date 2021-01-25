@@ -5,18 +5,23 @@ import { AtList, AtListItem, AtSearchBar } from "taro-ui";
 
 interface CombineVenueType {
   list: any[];
+  handleItem: (params: any) => void;
 }
 
-const CombineVenue: Taro.FC<CombineVenueType> = ({ list }) => {
+const CombineVenue: Taro.FC<CombineVenueType> = ({ list, handleItem }) => {
   const onChange = (e: any) => {
     console.log("e: ", e);
   };
   const onConfirm = () => {
     console.log("e: ");
   };
+  const setCurrentItem = (item: any) => {
+    console.log("e: ===>", item);
+    handleItem(item);
+  };
 
   return (
-    <View onClick={(e) => console.log(e)}>
+    <View>
       <AtSearchBar
         actionName="搜一下"
         value=""
@@ -30,7 +35,11 @@ const CombineVenue: Taro.FC<CombineVenueType> = ({ list }) => {
       >
         <AtList>
           {list.map((item: any) => (
-            <AtListItem title="222" />
+            <AtListItem
+              title={item.name}
+              key={item.id}
+              onClick={() => setCurrentItem(item)}
+            />
           ))}
         </AtList>
       </ScrollView>

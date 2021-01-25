@@ -6,22 +6,27 @@ import {
   AtForm,
   AtImagePicker,
   AtInput,
+  AtMessage,
   AtSwitch,
   AtTextarea,
 } from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { fileUplad } from "@/actions/manger/venue";
 import { CombineType } from "@/reducers";
 import dayjs from "dayjs";
 import {
+  checkLessionColoumns,
   LessionAction,
   LessionActionType,
   LessionKeys,
 } from "@/reducers/manger/lession";
+import { getVenueList } from "@/actions/manger/indexManager";
+import { addLession, lessionFileUplad } from "@/actions/manger/lession";
+import { checkValue } from "@/utils/commom";
+import { cloneDeep } from "lodash";
 import styles from "./index.module.scss";
 import CombineVenue from "./combineVenue";
 
-type NeedSet = "endTime" | "startTime" | "shenshiqu";
+type NeedSet = "endTime" | "startTime" | "shenshiqu" | "venuiName";
 type NeedSetMap = Record<NeedSet, any>;
 
 const customStyle = "background:#1a1a1a; color:#fff;";
@@ -45,16 +50,26 @@ const LessionPage: Taro.FC = () => {
       if (operationType === "add") {
         const currentUploadItem = fileList[fileList.length - 1];
         dispatch({
-          thunk: fileUplad({ file: currentUploadItem.url }, "list"),
+          thunk: lessionFileUplad(
+            { file: currentUploadItem.url },
+            coloum === "files" ? "list" : "main"
+          ),
           name: "uploadFileLoad",
         });
       } else {
         // atImagePicker组件bug 删除时使用延时解决上传不会触发选择事件
         setTimeout(() => {
-          dispatch({
-            type: LessionActionType.DELETE_PIC,
-            payload: { index },
-          } as LessionAction);
+          if (coloum === "files") {
+            dispatch({
+              type: LessionActionType.DELETE_LESSION_PIC,
+              payload: { index },
+            } as LessionAction);
+          }
+          if (coloum === "mainPic") {
+            dispatch({
+              type: LessionActionType.DELETE_MAIN_PIC,
+            } as LessionAction);
+          }
         });
       }
     } else {
@@ -79,34 +94,62 @@ const LessionPage: Taro.FC = () => {
     switch (coloum) {
       case "startTime":
       case "endTime":
-        const date = dayjs(value).format("YYYY-MM-DD hh:mm");
+        const date = dayjs(value).format("YYYY-MM-DD HH:mm");
         setSelectData({ ...selectData, [coloum]: date });
         dispatch({
           type: LessionActionType.SET_VALUE,
-          payload: { coloum, value },
+          payload: {
+            coloum,
+            value: date,
+          },
         } as LessionAction);
+        break;
       default:
         dispatch({
           type: LessionActionType.SET_VALUE,
           payload: { coloum, value },
-        } as LessionAction);
+        });
     }
   };
 
   const handleSubmit = () => {
-    console.log(lessionData);
+    const isChecked = checkValue(checkLessionColoumns, lessionData);
+
+    if (isChecked) {
+      const cloneData = cloneDeep(lessionData);
+      cloneData.files = cloneData.files.map((item: any) => item.id);
+      cloneData.mainPic = cloneData.mainPic[0].id;
+      dispatch({
+        thunk: addLession(cloneData),
+        name: "addLessionLoading",
+      });
+    }
+  };
+
+  const openVenueList = () => {
+    setShowVenue(true);
+    dispatch({
+      thunk: getVenueList({ pageNo: 1 }),
+    });
+  };
+
+  const handleItem = (item: any) => {
+    setSelectData({ ...selectData, venuiName: item.name });
+    handleChange(item.id, "venueId");
+    setShowVenue(false);
   };
 
   return (
     <View className={styles.formModule}>
-      <AtForm>
+      <AtMessage />
+      <AtForm customStyle="zIndex:0">
         <AtInput
-          name="startTime"
+          name="venuiName"
           title="关联场馆"
           type="text"
-          value={selectData.startTime}
+          value={selectData.venuiName}
           editable={false}
-          onClick={() => setShowVenue(true)}
+          onClick={openVenueList}
           onChange={() => {}}
         />
         <AtInput
@@ -131,13 +174,6 @@ const LessionPage: Taro.FC = () => {
           />
         </View>
         <AtInput
-          name="address"
-          title="地址"
-          value={lessionData.address}
-          type="text"
-          onChange={(value) => handleChange(value, "address")}
-        />
-        <AtInput
           name="startTime"
           title="开始时间"
           type="text"
@@ -157,8 +193,16 @@ const LessionPage: Taro.FC = () => {
         />
 
         <AtInput
+          name="price"
+          title="课程价格"
+          value={lessionData.price}
+          type="text"
+          onChange={(value) => handleChange(value, "price")}
+        />
+        <AtInput
           name="address"
           title="地点"
+          value={lessionData.address}
           type="text"
           onChange={(value) => handleChange(value, "address")}
         />
@@ -166,6 +210,7 @@ const LessionPage: Taro.FC = () => {
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>主图片</View>
           <AtImagePicker
             files={lessionData.mainPic}
+            showAddBtn={!(lessionData.mainPic?.length === 1)}
             multiple={false}
             onChange={(fileList: any[], operationType: string, index: number) =>
               handleChange(
@@ -190,7 +235,11 @@ const LessionPage: Taro.FC = () => {
             }
           />
         </View>
-        <AtSwitch title="开启" checked={lessionData.status === 1} />
+        <AtSwitch
+          title="开启"
+          checked={lessionData.status === 1}
+          onChange={(b: boolean) => handleChange(Number(b), "status")}
+        />
         <AtButton
           onClick={handleSubmit}
           customStyle={{ margin: 10 }}
@@ -222,7 +271,7 @@ const LessionPage: Taro.FC = () => {
         customStyle={customStyle}
         onclose={() => setShowVenue(false)}
       >
-        <CombineVenue list={managerIndex.venueList} />
+        <CombineVenue list={managerIndex.venueList} handleItem={handleItem} />
       </van-popup>
     </View>
   );

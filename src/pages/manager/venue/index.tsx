@@ -1,5 +1,5 @@
 import { View } from "@tarojs/components";
-import Taro, { atMessage } from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 import {
   AtButton,
@@ -18,12 +18,12 @@ import {
   VenueStateType,
   VenueType,
   checkColoumns,
-  JyObj,
 } from "@/reducers/manger/venue";
 // import dayjs from "dayjs";
 import { getDictData } from "@/actions/global";
 import { dictKeyName, GlobalStateType } from "@/reducers/global";
 import { cloneDeep } from "lodash";
+import { checkValue } from "@/utils/commom";
 import styles from "./index.module.scss";
 
 type NeedSet =
@@ -102,7 +102,7 @@ const VenuePage: Taro.FC = () => {
         setTimeout(() => {
           if (coloum === "files") {
             dispatch({
-              type: VenueType.DELETE_PIC,
+              type: VenueType.DELETE_VENUN_PIC,
               payload: { index },
             } as VenueAction);
           }
@@ -154,7 +154,6 @@ const VenuePage: Taro.FC = () => {
       case "startTime":
       case "endTime":
         console.log(value);
-        // const date = dayjs(value).format("YYYY-MM-DD hh:mm");
         setSelectData({ ...selectData, [coloum]: value });
         dispatch({
           type: VenueType.SET_VALUE,
@@ -184,33 +183,7 @@ const VenuePage: Taro.FC = () => {
   };
 
   const handleSubmit = () => {
-    let isChecked: boolean = true;
-    const keysList = Object.keys(checkColoumns);
-    for (let index = 0; index < keysList.length; index++) {
-      const key = keysList[index];
-      const checkedObj = checkColoumns[key] as JyObj;
-      if (!venueData[key]) {
-        atMessage({ message: checkedObj.errMsg });
-        isChecked = false;
-        break;
-      }
-      if (checkedObj.patter?.rege) {
-        const res = checkedObj.patter?.rege?.test(venueData[key]);
-        if (!res) {
-          atMessage({ message: checkedObj.patter?.msg });
-          isChecked = false;
-          break;
-        }
-      }
-      if (checkedObj.patter?.fn) {
-        const res = checkedObj.patter?.fn(venueData[key]);
-        if (!res) {
-          atMessage({ message: checkedObj.patter?.msg });
-          isChecked = false;
-          break;
-        }
-      }
-    }
+    const isChecked = checkValue(checkColoumns, venueData);
 
     if (isChecked) {
       const cloneData = cloneDeep(venueData);

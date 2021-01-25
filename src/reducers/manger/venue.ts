@@ -79,9 +79,9 @@ export enum VenueType {
   /** 删除主图片 */
   DELETE_VENUN_MAIN_PIC = "DELETE_VENUN_MAIN_PIC",
   /**上传成功后添加图片 */
-  SET_PIC = "SET_PIC",
+  SET_VENUN_PIC = "SET_VENUN_PIC",
   /**点击删除图片 */
-  DELETE_PIC = "DELETE_PIC",
+  DELETE_VENUN_PIC = "DELETE_VENUN_PIC",
   /**设置输入的值 */
   SET_VALUE = "SET_VALUE",
 }
@@ -100,7 +100,7 @@ const initialState: VenueStateType = {
 export default function venue(state = initialState, action: VenueAction) {
   const { payload, type } = action;
   switch (type) {
-    case VenueType.SET_PIC:
+    case VenueType.SET_VENUN_PIC:
       return {
         ...state,
         venueData: {
@@ -127,7 +127,7 @@ export default function venue(state = initialState, action: VenueAction) {
           mainPic: [],
         },
       };
-    case VenueType.DELETE_PIC:
+    case VenueType.DELETE_VENUN_PIC:
       const index = payload!.index;
       state.venueData.files.splice(index, 1);
       return {

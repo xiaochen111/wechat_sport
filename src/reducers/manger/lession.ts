@@ -1,3 +1,5 @@
+import { JyObj } from "./venue";
+
 export interface LessionStateType {
   /**关联场馆 */
   venueId: string;
@@ -25,8 +27,8 @@ export interface LessionStateType {
 
 export type LessionKeys = keyof LessionStateType;
 
+type LessionDateRequire = Record<LessionKeys, JyObj>;
 /**校验字端 */
-type LessionDateRequire = Record<LessionKeys, { errMsg: string; patter?: any }>;
 export const checkLessionColoumns: LessionDateRequire = {
   venueId: { errMsg: "请选择场馆" },
   name: { errMsg: "课程名称不能为空" },
@@ -35,10 +37,22 @@ export const checkLessionColoumns: LessionDateRequire = {
   address: { errMsg: "课程地址不能为空" },
   startTime: { errMsg: "开始时间不能为空" },
   endTime: { errMsg: "介绍时间不能为空" },
-  files: { errMsg: "场馆图片不能为空" },
+  files: {
+    errMsg: "场馆图片不能为空",
+    patter: {
+      fn: (list: any[]) => Boolean(list.length),
+      msg: "场馆图片不能为空",
+    },
+  },
   status: { errMsg: "请选择状态" },
   price: { errMsg: "请输入课程价格" },
-  mainPic: { errMsg: "请上传主图" },
+  mainPic: {
+    errMsg: "主图片不能为空",
+    patter: {
+      fn: (list: any[]) => Boolean(list.length),
+      msg: "主图片不能为空",
+    },
+  },
 };
 
 /**场馆数据类型 */
@@ -57,7 +71,7 @@ export enum LessionActionType {
   /**上传成功后设置图片 */
   SET_FILES_PIC = "SET_FILES_PIC",
   /**点击删除图片 */
-  DELETE_PIC = "DELETE_PIC",
+  DELETE_LESSION_PIC = "DELETE_LESSION_PIC",
   /**设置输入的值 */
   SET_VALUE = "SET_VALUE",
 }
@@ -103,7 +117,7 @@ export default function lession(state = initialState, action: LessionAction) {
           ],
         },
       };
-    case LessionActionType.DELETE_PIC:
+    case LessionActionType.DELETE_LESSION_PIC:
       const index = payload!.index;
       state.lessionData.files.splice(index, 1);
       return {
