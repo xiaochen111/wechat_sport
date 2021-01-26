@@ -10,7 +10,7 @@ import {
   AtTextarea,
 } from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { addVenue, fileUplad } from "@/actions/manger/venue";
+import { addVenue, editVenue, fileUplad } from "@/actions/manger/venue";
 import { CombineType } from "@/reducers";
 import {
   VenueAction,
@@ -70,19 +70,40 @@ const VenuePage: Taro.FC = () => {
   const [isDatePopup, setIsDatePopup] = useState<NeedSet>("startTime");
   const [selectData, setSelectData] = useState<NeedSetMap>({} as NeedSetMap);
 
-  const state: CombineType = useSelector((s: CombineType) => s);
-  const venue: VenueStateType = state.venue;
+  const state: CombineType = useSelector((s) => s);
+  const venue: any = state.venue;
   const loadingReducer: any = state.loadingReducer;
   const gloablData: GlobalStateType = state.global;
 
   const dispatch = useDispatch();
-  const { venueData } = venue;
+  const { venueData, isEidt } = venue as VenueStateType;
 
   useEffect(() => {
     dispatch({
       thunk: getDictData(),
     });
-  }, []);
+    if (isEidt) {
+      const {
+        city,
+        province,
+        district,
+        startTime,
+        endTime,
+        chargingType,
+        gymType,
+      } = venueData;
+      const currentProvince = areaList.province_list[province];
+      const currentCity = areaList.city_list[city];
+      const currentDistrict = areaList.county_list[district];
+      setSelectData({
+        shenshiqu: `${currentProvince}-${currentCity}-${currentDistrict}`,
+        endTime,
+        startTime,
+        jifeileixing: chargingType,
+        gymType,
+      });
+    }
+  }, [isEidt]);
 
   // 输入时赋值
   const handleChange = (value: any, coloum: VenueColoumn, type?: "upload") => {
@@ -115,7 +136,7 @@ const VenuePage: Taro.FC = () => {
       }
     } else {
       dispatch({
-        type: VenueType.SET_VALUE,
+        type: VenueType.SET_VENUN_VALUE,
         payload: { coloum, value },
       } as VenueAction);
     }
@@ -145,7 +166,7 @@ const VenuePage: Taro.FC = () => {
           { coloum: "district", value: value[2].code },
         ].forEach((item) => {
           dispatch({
-            type: VenueType.SET_VALUE,
+            type: VenueType.SET_VENUN_VALUE,
             payload: item,
           } as VenueAction);
         });
@@ -156,7 +177,7 @@ const VenuePage: Taro.FC = () => {
         console.log(value);
         setSelectData({ ...selectData, [coloum]: value });
         dispatch({
-          type: VenueType.SET_VALUE,
+          type: VenueType.SET_VENUN_VALUE,
           payload: { coloum, value },
         } as VenueAction);
         break;
@@ -164,19 +185,19 @@ const VenuePage: Taro.FC = () => {
         console.log(value);
         const currentValue = value.value === "分钟" ? 1 : 2;
         dispatch({
-          type: VenueType.SET_VALUE,
+          type: VenueType.SET_VENUN_VALUE,
           payload: { coloum: "chargingType", value: currentValue },
         } as VenueAction);
         break;
       case "gymType":
         dispatch({
-          type: VenueType.SET_VALUE,
+          type: VenueType.SET_VENUN_VALUE,
           payload: { coloum, value: value.value },
         } as VenueAction);
         break;
       default:
         dispatch({
-          type: VenueType.SET_VALUE,
+          type: VenueType.SET_VENUN_VALUE,
           payload: { coloum, value },
         } as VenueAction);
     }
@@ -190,7 +211,7 @@ const VenuePage: Taro.FC = () => {
       cloneData.files = cloneData.files.map((item: any) => item.id);
       cloneData.mainPic = cloneData.mainPic[0].id;
       dispatch({
-        thunk: addVenue(cloneData),
+        thunk: isEidt ? editVenue(cloneData) : addVenue(cloneData),
         name: "addVenueLoading",
       });
     }
@@ -199,7 +220,7 @@ const VenuePage: Taro.FC = () => {
   return (
     <View className={styles.formModule}>
       <AtMessage />
-      <AtForm>
+      <AtForm customStyle="zIndex:0">
         <AtInput
           name="name"
           title="场馆名称"
@@ -313,7 +334,7 @@ const VenuePage: Taro.FC = () => {
           type="primary"
           loading={loadingReducer.addVenueLoading}
         >
-          提交
+          {isEidt ? "修改" : "提交"}
         </AtButton>
       </AtForm>
 

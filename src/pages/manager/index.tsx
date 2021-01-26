@@ -1,11 +1,16 @@
 import { View } from "@tarojs/components";
-import React from "react";
 import Taro from "@tarojs/taro";
+import { VenueAction, VenueType } from "@/reducers/manger/venue";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { AtList, AtListItem } from "taro-ui";
 
 const ManagerPage: Taro.FC = () => {
+  const dispatch = useDispatch();
   const toManagerPage = (type: number) => {
-    console.log("type: ", type);
+    dispatch({
+      type: VenueType.ADD_VENUN,
+    } as VenueAction);
     Taro.navigateTo({ url: "/pages/manager/venue/index" });
   };
 

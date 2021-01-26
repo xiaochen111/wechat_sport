@@ -75,6 +75,24 @@
         {
           "name": "pages/authorize/login/index",
           "pathName": "pages/authorize/login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/manager/personTralar/index",
+          "pathName": "pages/manager/personTralar/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/manager/index",
+          "pathName": "pages/manager/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/home/index",
+          "pathName": "pages/home/index",
           "scene": null
         }
       ]

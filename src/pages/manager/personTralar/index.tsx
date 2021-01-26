@@ -12,77 +12,84 @@ import {
 } from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
 import { CombineType } from "@/reducers";
-import dayjs from "dayjs";
-import {
-  checkLessionColoumns,
-  LessionAction,
-  LessionActionType,
-  LessionKeys,
-} from "@/reducers/manger/lession";
-import { getVenueList } from "@/actions/manger/indexManager";
-import { addLession, lessionFileUplad } from "@/actions/manger/lession";
-import { checkValue } from "@/utils/commom";
+// import dayjs from "dayjs";
 import { cloneDeep } from "lodash";
+import { checkValue } from "@/utils/commom";
+import {
+  checkPersonTralarColoumns,
+  PersonTarlarType,
+  PersonTralarAction,
+  PersonTralarColoumn,
+  PersonTralarStateType,
+} from "@/reducers/manger/personTralar";
+import {
+  addPersonTralar,
+  personTralarFileUplad,
+} from "@/actions/manger/personTralar";
 import styles from "./index.module.scss";
-import CombineVenue from "./combineVenue";
 
-type NeedSet = "endTime" | "startTime" | "shenshiqu" | "venuiName";
+type NeedSet = "endTime" | "startTime";
+
 type NeedSetMap = Record<NeedSet, any>;
 
 const customStyle = "background:#1a1a1a; color:#fff;";
 
-const LessionPage: Taro.FC = () => {
+const VenuePage: Taro.FC = () => {
   const [show, setShow] = useState<boolean>(false);
-  const [showVenue, setShowVenue] = useState<boolean>(false);
   const [isDatePopup, setIsDatePopup] = useState<NeedSet>("startTime");
   const [selectData, setSelectData] = useState<NeedSetMap>({} as NeedSetMap);
 
-  const state: CombineType = useSelector((s) => s);
+  const state: CombineType = useSelector((s: CombineType) => s);
+  const personTralar: PersonTralarStateType = state.personTralar;
+  const loadingReducer: any = state.loadingReducer;
+
   const dispatch = useDispatch();
-  const lession = state.lession;
-  const managerIndex = state.managerIndex;
-  const { lessionData } = lession;
+  const { personTralarData } = personTralar;
 
   // 输入时赋值
-  const handleChange = (value: any, coloum: LessionKeys, type?: "upload") => {
+  const handleChange = (
+    value: any,
+    coloum: PersonTralarColoumn,
+    type?: "upload"
+  ) => {
     if (type === "upload") {
       const { fileList, operationType, index } = value;
       if (operationType === "add") {
         const currentUploadItem = fileList[fileList.length - 1];
         dispatch({
-          thunk: lessionFileUplad(
+          thunk: personTralarFileUplad(
             { file: currentUploadItem.url },
             coloum === "files" ? "list" : "main"
           ),
-          name: "uploadFileLoad",
+          name: "imgUploading",
         });
       } else {
         // atImagePicker组件bug 删除时使用延时解决上传不会触发选择事件
         setTimeout(() => {
           if (coloum === "files") {
             dispatch({
-              type: LessionActionType.DELETE_LESSION_PIC,
+              type: PersonTarlarType.DELETE_PERSON_TRALAR_PIC,
               payload: { index },
-            } as LessionAction);
+            } as PersonTralarAction);
           }
           if (coloum === "mainPic") {
             dispatch({
-              type: LessionActionType.DELETE_MAIN_PIC,
-            } as LessionAction);
+              type: PersonTarlarType.DELETE_PERSON_TRALAR_MAIN_PIC,
+            });
           }
         });
       }
     } else {
       dispatch({
-        type: LessionActionType.SET_LESSION_VALUE,
+        type: PersonTarlarType.SET_PERSON_TRALAR_VALUE,
         payload: { coloum, value },
-      } as LessionAction);
+      } as PersonTralarAction);
     }
   };
 
   const openPopup = (type: NeedSet) => {
-    // 有点击穿透的bug
-    if (!showVenue) {
+    // 点击弹窗穿透bug
+    if (!show) {
       setShow(true);
       setIsDatePopup(type);
     }
@@ -94,55 +101,33 @@ const LessionPage: Taro.FC = () => {
     switch (coloum) {
       case "startTime":
       case "endTime":
-        const date = dayjs(value).format("YYYY-MM-DD HH:mm");
-        setSelectData({ ...selectData, [coloum]: date });
+        console.log(value);
+        setSelectData({ ...selectData, [coloum]: value });
         dispatch({
-          type: LessionActionType.SET_LESSION_VALUE,
-          payload: {
-            coloum,
-            value: date,
-          },
-        } as LessionAction);
+          type: PersonTarlarType.SET_PERSON_TRALAR_VALUE,
+          payload: { coloum, value },
+        } as PersonTralarAction);
         break;
       default:
         dispatch({
-          type: LessionActionType.SET_LESSION_VALUE,
+          type: PersonTarlarType.SET_PERSON_TRALAR_VALUE,
           payload: { coloum, value },
-        });
+        } as PersonTralarAction);
     }
   };
 
   const handleSubmit = () => {
-    const isChecked = checkValue(checkLessionColoumns, lessionData);
+    const isChecked = checkValue(checkPersonTralarColoumns, personTralarData);
 
     if (isChecked) {
-      const cloneData = cloneDeep(lessionData);
+      const cloneData = cloneDeep(personTralarData);
       cloneData.files = cloneData.files.map((item: any) => item.id);
       cloneData.mainPic = cloneData.mainPic[0].id;
       dispatch({
-        thunk: addLession(cloneData),
-        name: "addLessionLoading",
+        thunk: addPersonTralar(cloneData),
+        name: "addVenueLoading",
       });
     }
-  };
-
-  const openVenueList = () => {
-    setShowVenue(true);
-    dispatch({
-      thunk: getVenueList({ pageNo: 1 }),
-    });
-  };
-
-  const handleItem = (item: any) => {
-    setSelectData({ ...selectData, venuiName: item.name });
-    handleChange(item.id, "venueId");
-    setShowVenue(false);
-  };
-
-  const handleSearch = (name: string) => {
-    dispatch({
-      thunk: getVenueList({ pageNo: 1, name }),
-    });
   };
 
   return (
@@ -150,33 +135,38 @@ const LessionPage: Taro.FC = () => {
       <AtMessage />
       <AtForm customStyle="zIndex:0">
         <AtInput
-          name="venuiName"
-          title="关联场馆"
+          name="coashName"
+          title="私教名称"
           type="text"
-          value={selectData.venuiName}
-          editable={false}
-          onClick={openVenueList}
-          onChange={() => {}}
+          value={personTralarData.coashName}
+          onChange={(value) => handleChange(value, "coashName")}
         />
         <AtInput
-          name="name"
-          title="课程名称"
+          name="coashTheme"
+          title="私教主题"
+          value={personTralarData.coashTheme}
           type="text"
-          value={lessionData.name}
-          onChange={(value) => handleChange(value, "name")}
+          onChange={(value) => handleChange(value, "coashTheme")}
         />
         <View style={{ padding: 10 }}>
-          <View style={{ lineHeight: 2, paddingLeft: 5 }}>课程简介</View>
+          <View style={{ lineHeight: 2, paddingLeft: 5 }}>私教介绍</View>
           <AtTextarea
-            value={lessionData.descript}
-            onChange={(value) => handleChange(value, "descript")}
+            value={personTralarData.coashDescript}
+            onChange={(value) => handleChange(value, "coashDescript")}
           />
         </View>
+        <AtInput
+          name="price"
+          title="显示价"
+          value={personTralarData.price}
+          type="text"
+          onChange={(value) => handleChange(value, "price")}
+        />
         <View style={{ padding: 10 }}>
-          <View style={{ lineHeight: 2, paddingLeft: 5 }}>课程介绍</View>
+          <View style={{ lineHeight: 2, paddingLeft: 5 }}>收费目录</View>
           <AtTextarea
-            value={lessionData.descriptMore}
-            onChange={(value) => handleChange(value, "descriptMore")}
+            value={personTralarData.priceDirectory}
+            onChange={(value) => handleChange(value, "priceDirectory")}
           />
         </View>
         <AtInput
@@ -197,26 +187,18 @@ const LessionPage: Taro.FC = () => {
           onClick={() => openPopup("endTime")}
           onChange={() => {}}
         />
-
-        <AtInput
-          name="price"
-          title="课程价格"
-          value={lessionData.price}
-          type="text"
-          onChange={(value) => handleChange(value, "price")}
-        />
         <AtInput
           name="address"
           title="地点"
-          value={lessionData.address}
+          value={personTralarData.address}
           type="text"
           onChange={(value) => handleChange(value, "address")}
         />
         <View style={{ padding: 10 }}>
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>主图片</View>
           <AtImagePicker
-            files={lessionData.mainPic}
-            showAddBtn={!(lessionData.mainPic?.length === 1)}
+            files={personTralarData.mainPic}
+            showAddBtn={!(personTralarData.mainPic?.length === 1)}
             multiple={false}
             onChange={(fileList: any[], operationType: string, index: number) =>
               handleChange(
@@ -230,7 +212,7 @@ const LessionPage: Taro.FC = () => {
         <View style={{ padding: 10 }}>
           <View style={{ lineHeight: 2, paddingLeft: 5 }}>上传图片</View>
           <AtImagePicker
-            files={lessionData.files}
+            files={personTralarData.files}
             multiple={false}
             onChange={(fileList: any[], operationType: string, index: number) =>
               handleChange(
@@ -242,14 +224,15 @@ const LessionPage: Taro.FC = () => {
           />
         </View>
         <AtSwitch
-          title="开启"
-          checked={lessionData.status === 1}
+          title="上线"
+          checked={personTralarData.status === 1}
           onChange={(b: boolean) => handleChange(Number(b), "status")}
         />
         <AtButton
           onClick={handleSubmit}
           customStyle={{ margin: 10 }}
           type="primary"
+          loading={loadingReducer.addVenueLoading}
         >
           提交
         </AtButton>
@@ -262,29 +245,19 @@ const LessionPage: Taro.FC = () => {
         customStyle={customStyle}
         onclose={() => setShow(false)}
       >
-        <van-datetime-picker
-          type="datetime"
-          onconfirm={(e: any) => selectCurrentValue(isDatePopup, e.detail)}
-          value={new Date().getTime()}
-          oncancel={() => setShow(false)}
-        />
-      </van-popup>
-
-      {/* 关联场馆弹窗 */}
-      <van-popup
-        show={showVenue}
-        position="bottom"
-        customStyle={customStyle}
-        onclose={() => setShowVenue(false)}
-      >
-        <CombineVenue
-          list={managerIndex.venueList}
-          handleItem={handleItem}
-          handleSearch={handleSearch}
-        />
+        {(isDatePopup === "startTime" || isDatePopup === "endTime") && (
+          <van-datetime-picker
+            type="time"
+            minHour={0}
+            maxHour={23}
+            onconfirm={(e: any) => selectCurrentValue(isDatePopup, e.detail)}
+            value="12:00"
+            oncancel={() => setShow(false)}
+          />
+        )}
       </van-popup>
     </View>
   );
 };
 
-export default LessionPage;
+export default VenuePage;

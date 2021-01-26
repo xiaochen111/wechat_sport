@@ -4,6 +4,7 @@ export default {
     "pages/authorize/index",
     "pages/manager/venue/index",
     "pages/manager/lession/index",
+    "pages/manager/personTralar/index",
     "pages/lessionDetail/index",
     "pages/authorize/login/index",
     "pages/me/index",

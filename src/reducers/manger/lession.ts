@@ -23,6 +23,7 @@ export interface LessionStateType {
   files: any[];
   /**1-正常 0-关闭 */
   status: number;
+  [key: string]: any;
 }
 
 export type LessionKeys = keyof LessionStateType;
@@ -59,6 +60,7 @@ export const checkLessionColoumns: LessionDateRequire = {
 export interface LessionAllStateType {
   lessionData: LessionStateType;
   coloum?: LessionKeys;
+  isEidt: boolean;
   [key: string]: any;
 }
 
@@ -73,7 +75,11 @@ export enum LessionActionType {
   /**点击删除图片 */
   DELETE_LESSION_PIC = "DELETE_LESSION_PIC",
   /**设置输入的值 */
-  SET_VALUE = "SET_VALUE",
+  SET_LESSION_VALUE = "SET_LESSION_VALUE",
+  /**修改课程信息时，初始化信息 */
+  EIDT_LESSION_INIT_DATA = "EIDT_LESSION_INIT_DATA",
+  /**新增课程 */
+  ADD_LIESSION = "ADD_LIESSION",
 }
 
 /**dispatch 参数类型 */
@@ -84,7 +90,8 @@ export interface LessionAction {
 
 /**场馆管理redux 数据 */
 const initialState: LessionAllStateType = {
-  lessionData: {} as LessionStateType,
+  lessionData: { status: 0 } as LessionStateType,
+  isEidt: false,
 };
 
 export default function lession(state = initialState, action: LessionAction) {
@@ -124,13 +131,25 @@ export default function lession(state = initialState, action: LessionAction) {
         ...state,
         lessionData: { ...state.lessionData, files: state.lessionData.files },
       };
-    case LessionActionType.SET_VALUE:
+    case LessionActionType.SET_LESSION_VALUE:
       return {
         ...state,
         lessionData: {
           ...state.lessionData,
           [payload!.coloum!]: payload!.value,
         },
+      };
+    case LessionActionType.EIDT_LESSION_INIT_DATA:
+      return {
+        ...state,
+        lessionData: payload?.lessionData!,
+        isEidt: true,
+      };
+    case LessionActionType.ADD_LIESSION:
+      return {
+        ...state,
+        lessionData: {} as LessionStateType,
+        isEidt: false,
       };
     default:
       return state;

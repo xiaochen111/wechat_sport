@@ -45,5 +45,25 @@ export const addVenue = (params: any) => async () => {
       title: "添加成功",
       icon: "success",
     });
+    Taro.switchTab({
+      url: "/pages/home/index",
+    });
+  }
+};
+
+/**
+ * 修改场馆
+ */
+export const editVenue = (params: any) => async () => {
+  const res = await request("/gym/venueForAdmin/updateVenue.admin", params);
+  const { success, result } = res;
+  if (success) {
+    Taro.showToast({
+      title: "修改成功",
+      icon: "success",
+    });
+    Taro.switchTab({
+      url: "/pages/home/index",
+    });
   }
 };

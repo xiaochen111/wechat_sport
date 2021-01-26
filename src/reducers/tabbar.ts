@@ -66,7 +66,7 @@ const INITIAL_STATE: TabbarStateType = {
       selectedIconPath: "../images/me-active.png",
     },
   ],
-  isManger: false,
+  isManger: true,
 };
 
 export default function tabber(state = INITIAL_STATE, action: TabbarAction) {

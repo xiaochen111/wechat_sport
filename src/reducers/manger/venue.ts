@@ -1,4 +1,4 @@
-interface VenueDateType {
+export interface VenueDateType {
   /**场馆名称 */
   name: string;
   /**省 */
@@ -25,6 +25,7 @@ interface VenueDateType {
   mainPic: any[];
   /**上传的图片  */
   files: any[];
+  [key: string]: any;
 }
 
 export type VenueColoumn = keyof VenueDateType;
@@ -69,6 +70,7 @@ export const checkColoumns: VenueDateRequire = {
 export interface VenueStateType {
   venueData: VenueDateType;
   coloum?: VenueColoumn;
+  isEidt: boolean;
   [key: string]: any;
 }
 
@@ -83,7 +85,11 @@ export enum VenueType {
   /**点击删除图片 */
   DELETE_VENUN_PIC = "DELETE_VENUN_PIC",
   /**设置输入的值 */
-  SET_VALUE = "SET_VALUE",
+  SET_VENUN_VALUE = "SET_VENUN_VALUE",
+  /**修改信息时，初始化信息 */
+  EIDT_INIT_DATA = "EIDT_INIT_DATA",
+  /**新增场馆 */
+  ADD_VENUN = "ADD_VENUN",
 }
 
 /**dispatch 参数类型 */
@@ -95,6 +101,7 @@ export interface VenueAction {
 /**场馆管理redux 数据 */
 const initialState: VenueStateType = {
   venueData: {} as VenueDateType,
+  isEidt: false,
 };
 
 export default function venue(state = initialState, action: VenueAction) {
@@ -134,10 +141,22 @@ export default function venue(state = initialState, action: VenueAction) {
         ...state,
         venueData: { ...state.venueData, files: state.venueData.files },
       };
-    case VenueType.SET_VALUE:
+    case VenueType.SET_VENUN_VALUE:
       return {
         ...state,
         venueData: { ...state.venueData, [payload!.coloum!]: payload!.value },
+      };
+    case VenueType.EIDT_INIT_DATA:
+      return {
+        ...state,
+        venueData: payload?.venueData,
+        isEidt: true,
+      };
+    case VenueType.ADD_VENUN:
+      return {
+        ...state,
+        venueData: {} as VenueDateType,
+        isEidt: false,
       };
     default:
       return state;

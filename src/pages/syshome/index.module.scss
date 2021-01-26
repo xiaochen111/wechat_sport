@@ -18,12 +18,22 @@
       color: #fff;
       background-color: red;
     }
+
+    .van-swipe-cell__left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 130px;
+      color: #fff;
+      background-color: green;
+    }
   }
 
   .itemMain {
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
 

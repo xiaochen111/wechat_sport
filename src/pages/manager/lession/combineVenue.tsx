@@ -1,38 +1,42 @@
 import Taro from "@tarojs/taro";
 import { ScrollView, View } from "@tarojs/components";
-import React from "react";
+import React, { useState } from "react";
 import { AtList, AtListItem, AtSearchBar } from "taro-ui";
 
 interface CombineVenueType {
   list: any[];
   handleItem: (params: any) => void;
+  handleSearch: (name: string) => void;
 }
 
-const CombineVenue: Taro.FC<CombineVenueType> = ({ list, handleItem }) => {
+const CombineVenue: Taro.FC<CombineVenueType> = ({
+  list,
+  handleItem,
+  handleSearch,
+}) => {
+  const [value, setValue] = useState<string>("");
+
   const onChange = (e: any) => {
-    console.log("e: ", e);
+    setValue(e);
   };
-  const onConfirm = () => {
-    console.log("e: ");
+  const onClear = () => {
+    setValue("");
+    handleSearch("");
   };
   const setCurrentItem = (item: any) => {
-    console.log("e: ===>", item);
     handleItem(item);
   };
 
   return (
     <View>
       <AtSearchBar
-        actionName="搜一下"
-        value=""
+        actionName="搜索"
+        value={value}
         onChange={onChange}
-        onConfirm={onConfirm}
+        onActionClick={() => handleSearch(value)}
+        onClear={onClear}
       />
-      <ScrollView
-        scrollY
-        // onScrollToLower={onScrollToLower}
-        style={{ height: "60vh", background: "#fff" }}
-      >
+      <ScrollView scrollY style={{ height: "60vh", background: "#fff" }}>
         <AtList>
           {list.map((item: any) => (
             <AtListItem
