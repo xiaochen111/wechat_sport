@@ -31,6 +31,7 @@ import {
   PersonTralarAction,
   PersonTralarDateType,
 } from "@/reducers/manger/personTralar";
+import { setNav, TabbarAction } from "@/reducers/tabbar";
 import styles from "./index.module.scss";
 
 /**场馆item */
@@ -193,7 +194,6 @@ const PersonTralarItem: Taro.FC<{
 
   /**编辑私教 */
   const editCurrenPersonTralar = (it: PersonTralarDateType) => {
-    console.log("it: ", it);
     it.mainPic = [{ url: it.mainPicUrl, id: item.mainPic }];
     it.files = it.fileList.map((fileItem: any) => ({
       url: fileItem.fileAllPath,
@@ -288,6 +288,10 @@ const SysHome: Taro.FC = () => {
 
   useDidShow(() => {
     initData(currentModule!, { pageNo: 1 });
+    dispatch({
+      type: setNav.SET_CURRENT,
+      payload: { selected: 0 },
+    } as TabbarAction);
   });
 
   const initData = async (type: ListType, params: { pageNo: number }) => {

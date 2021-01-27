@@ -15,7 +15,13 @@ export const checkValue = (
   for (let index = 0; index < keysList.length; index++) {
     const key = keysList[index];
     const checkedObj = checkColoumns[key] as JyObj;
-    if (!(checkData[key] ?? false)) {
+    // const currentValue = checkData[key] ?? false;
+    //typeof currentValue === "boolean" && !currentValue
+    if (
+      checkData[key] === undefined ||
+      checkData[key] === null ||
+      checkData[key] === ""
+    ) {
       atMessage({ message: checkedObj.errMsg });
       isChecked = false;
       break;

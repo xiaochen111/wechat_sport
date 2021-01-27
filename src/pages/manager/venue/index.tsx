@@ -204,6 +204,7 @@ const VenuePage: Taro.FC = () => {
   };
 
   const handleSubmit = () => {
+    console.log("venueData: ", venueData);
     const isChecked = checkValue(checkColoumns, venueData);
 
     if (isChecked) {
