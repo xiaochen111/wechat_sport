@@ -1,6 +1,6 @@
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AtButton,
   AtForm,
@@ -20,13 +20,17 @@ import {
   LessionKeys,
 } from "@/reducers/manger/lession";
 import { getVenueList } from "@/actions/manger/indexManager";
-import { addLession, lessionFileUplad } from "@/actions/manger/lession";
+import {
+  addLession,
+  lessionFileUplad,
+  editLession,
+} from "@/actions/manger/lession";
 import { checkValue } from "@/utils/commom";
 import { cloneDeep } from "lodash";
 import styles from "./index.module.scss";
 import CombineVenue from "./combineVenue";
 
-type NeedSet = "endTime" | "startTime" | "shenshiqu" | "venuiName";
+type NeedSet = "endTime" | "startTime" | "venuiName";
 type NeedSetMap = Record<NeedSet, any>;
 
 const customStyle = "background:#1a1a1a; color:#fff;";
@@ -41,7 +45,15 @@ const LessionPage: Taro.FC = () => {
   const dispatch = useDispatch();
   const lession = state.lession;
   const managerIndex = state.managerIndex;
-  const { lessionData } = lession;
+  const { lessionData, isEidt } = lession;
+
+  useEffect(() => {
+    setSelectData({
+      startTime: lessionData.startTime,
+      endTime: lessionData.endTime,
+      venuiName: lessionData.venueName,
+    });
+  }, [isEidt]);
 
   // 输入时赋值
   const handleChange = (value: any, coloum: LessionKeys, type?: "upload") => {
@@ -120,7 +132,7 @@ const LessionPage: Taro.FC = () => {
       cloneData.files = cloneData.files.map((item: any) => item.id);
       cloneData.mainPic = cloneData.mainPic[0].id;
       dispatch({
-        thunk: addLession(cloneData),
+        thunk: isEidt ? editLession(cloneData) : addLession(cloneData),
         name: "addLessionLoading",
       });
     }
@@ -251,7 +263,7 @@ const LessionPage: Taro.FC = () => {
           customStyle={{ margin: 10 }}
           type="primary"
         >
-          提交
+          {isEidt ? "修改" : "提交"}
         </AtButton>
       </AtForm>
 

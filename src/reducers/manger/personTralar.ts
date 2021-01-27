@@ -1,6 +1,6 @@
 import { JyObj } from "./venue";
 
-interface PersonTralarDateType {
+export interface PersonTralarDateType {
   /**私教主题 */
   coashTheme: string;
   /**私教名字 */
@@ -23,6 +23,7 @@ interface PersonTralarDateType {
   files: any[];
   /**1-正常 0-关闭 */
   status: number;
+  [key: string]: any;
 }
 
 export type PersonTralarColoumn = keyof PersonTralarDateType;
@@ -59,6 +60,7 @@ export const checkPersonTralarColoumns: PersonTralarDateRequire = {
 export interface PersonTralarStateType {
   personTralarData: PersonTralarDateType;
   coloum?: PersonTralarColoumn;
+  isEidt: boolean;
   [key: string]: any;
 }
 
@@ -74,6 +76,10 @@ export enum PersonTarlarType {
   DELETE_PERSON_TRALAR_PIC = "DELETE_PERSON_TRALAR_PIC",
   /**设置输入的值 */
   SET_PERSON_TRALAR_VALUE = "SET_PERSON_TRALAR_VALUE",
+  /**编辑私教时初始化数据 */
+  EIDT_PERSON_TRALAR_INIT_DATA = "EIDT_PERSON_TRALAR_INIT_DATA",
+  /**新增私教 */
+  ADD_PERSON_TRALAR = "ADD_PERSON_TRALAR",
 }
 
 /**dispatch 参数类型 */
@@ -85,6 +91,7 @@ export interface PersonTralarAction {
 /**私教管理redux 数据 */
 const initialState: PersonTralarStateType = {
   personTralarData: { status: 0 } as PersonTralarDateType,
+  isEidt: false,
 };
 
 export default function personTralar(
@@ -137,6 +144,18 @@ export default function personTralar(
           ...state.personTralarData,
           [payload!.coloum!]: payload!.value,
         },
+      };
+    case PersonTarlarType.EIDT_PERSON_TRALAR_INIT_DATA:
+      return {
+        ...state,
+        personTralarData: payload?.personTralarData!,
+        isEidt: true,
+      };
+    case PersonTarlarType.ADD_PERSON_TRALAR:
+      return {
+        ...state,
+        personTralarData: {} as PersonTralarDateType,
+        isEidt: false,
       };
     default:
       return state;

@@ -32,7 +32,7 @@ export const getVenueList = (params: GetListType) => async (
         params.pageNo === 1
           ? MangerIndexActionType.SEARCH_VENUE_LIST
           : MangerIndexActionType.SET_VENUE_LIST,
-      payload: { venueList: result.list },
+      payload: { venueList: result.list, canloading: result.hasNextPage },
     });
   }
 };
@@ -54,8 +54,9 @@ export const getLessonList = (params: GetListType) => async (
         params.pageNo === 1
           ? MangerIndexActionType.RESET_LESSION_LIST
           : MangerIndexActionType.CHECK_LESSION_LIST,
-      payload: { lessionList: result.list },
+      payload: { lessionList: result.list, canloading: result.hasNextPage },
     });
+    console.log("result.hasNextPage: ", result.hasNextPage);
   }
 };
 
@@ -76,7 +77,10 @@ export const getPersonTralarList = (params: GetListType) => async (
         params.pageNo === 1
           ? MangerIndexActionType.RESET_PERSION_TRALAR_LIST
           : MangerIndexActionType.CHECK_PERSION_TRALAR_LIST,
-      payload: { personTralarList: result.list },
+      payload: {
+        personTralarList: result.list,
+        canloading: result.hasNextPage,
+      },
     });
   }
 };
@@ -128,7 +132,8 @@ export const deleteCurrentLession = (params: {
   }
 };
 
-export enum LessionState {
+/**课程或私教的状态 */
+export enum LessionOrPersonState {
   enable,
   disable,
 }
@@ -140,11 +145,11 @@ export enum LessionState {
 export const enableOrDisableLession = (params: {
   id: string;
   index: number;
-  state: LessionState;
+  state: LessionOrPersonState;
 }) => async (dispatch: Dispatch<ManagerIndexDispatchParams>) => {
   const { id, index, state } = params;
   const res = await request(
-    state === LessionState.disable
+    state === LessionOrPersonState.disable
       ? "/gym/venueCourseForAdmin/disableVenueCourse.admin"
       : "/gym/venueCourseForAdmin/enableVenueCourse.admin",
     { id }
@@ -152,13 +157,66 @@ export const enableOrDisableLession = (params: {
   if (res.success) {
     dispatch({
       type:
-        state === LessionState.disable
+        state === LessionOrPersonState.disable
           ? MangerIndexActionType.DISABLE_CURRENT_LESSION
           : MangerIndexActionType.ENBALE_CURRENT_LESSION,
       payload: { index },
     });
     Taro.showToast({
-      title: state === LessionState.disable ? "禁用成功" : "激活成功",
+      title: state === LessionOrPersonState.disable ? "禁用成功" : "激活成功",
+      icon: "success",
+    });
+  }
+};
+
+/**
+ * 删除私教
+ * @param params
+ */
+export const deleteCurrentPersonTralar = (params: {
+  id: string;
+  index: number;
+}) => async (dispatch: Dispatch<ManagerIndexDispatchParams>) => {
+  const { id, index } = params;
+  const res = await request("/gym/coashForAdmin/deleteCoashById.admin", { id });
+  if (res.success) {
+    dispatch({
+      type: MangerIndexActionType.DELETE_CURRENT_PERSION_TRALAR,
+      payload: { index },
+    });
+    Taro.showToast({
+      title: "删除成功",
+      icon: "success",
+    });
+  }
+};
+
+/**
+ * 激活or禁用私教
+ * @param params
+ */
+export const enableOrDisablePersionTralar = (params: {
+  id: string;
+  index: number;
+  state: LessionOrPersonState;
+}) => async (dispatch: Dispatch<ManagerIndexDispatchParams>) => {
+  const { id, index, state } = params;
+  const res = await request(
+    state === LessionOrPersonState.disable
+      ? "/gym/coashForAdmin/disableCoash.admin"
+      : "/gym/coashForAdmin/enableCoash.admin",
+    { id }
+  );
+  if (res.success) {
+    dispatch({
+      type:
+        state === LessionOrPersonState.disable
+          ? MangerIndexActionType.DISABLE_CURRENT_PERSION_TRALAR
+          : MangerIndexActionType.ENBALE_CURRENT_PERSION_TRALAR,
+      payload: { index },
+    });
+    Taro.showToast({
+      title: state === LessionOrPersonState.disable ? "禁用成功" : "激活成功",
       icon: "success",
     });
   }

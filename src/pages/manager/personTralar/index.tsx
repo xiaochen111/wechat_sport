@@ -1,6 +1,6 @@
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AtButton,
   AtForm,
@@ -24,6 +24,7 @@ import {
 } from "@/reducers/manger/personTralar";
 import {
   addPersonTralar,
+  eidtPersonTralar,
   personTralarFileUplad,
 } from "@/actions/manger/personTralar";
 import styles from "./index.module.scss";
@@ -44,7 +45,16 @@ const VenuePage: Taro.FC = () => {
   const loadingReducer: any = state.loadingReducer;
 
   const dispatch = useDispatch();
-  const { personTralarData } = personTralar;
+  const { personTralarData, isEidt } = personTralar;
+
+  useEffect(() => {
+    if (isEidt) {
+      setSelectData({
+        endTime: personTralarData.endTime,
+        startTime: personTralarData.startTime,
+      });
+    }
+  }, [isEidt]);
 
   // 输入时赋值
   const handleChange = (
@@ -124,7 +134,9 @@ const VenuePage: Taro.FC = () => {
       cloneData.files = cloneData.files.map((item: any) => item.id);
       cloneData.mainPic = cloneData.mainPic[0].id;
       dispatch({
-        thunk: addPersonTralar(cloneData),
+        thunk: isEidt
+          ? eidtPersonTralar(cloneData)
+          : addPersonTralar(cloneData),
         name: "addVenueLoading",
       });
     }
@@ -234,7 +246,7 @@ const VenuePage: Taro.FC = () => {
           type="primary"
           loading={loadingReducer.addVenueLoading}
         >
-          提交
+          {isEidt ? "修改" : "提交"}
         </AtButton>
       </AtForm>
 

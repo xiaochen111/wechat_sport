@@ -41,11 +41,31 @@ export const personTralarFileUplad = (
  */
 export const addPersonTralar = (params: any) => async () => {
   const res = await request("/gym/coashForAdmin/addCoash.admin", params);
-  const { success, result } = res;
+  const { success } = res;
   if (success) {
     Taro.showToast({
       title: "添加成功",
       icon: "success",
+    });
+    Taro.switchTab({
+      url: "/pages/home/index",
+    });
+  }
+};
+
+/**
+ * 修改私教
+ */
+export const eidtPersonTralar = (params: any) => async () => {
+  const res = await request("/gym/coashForAdmin/updateCoash.admin", params);
+  const { success } = res;
+  if (success) {
+    Taro.showToast({
+      title: "修改成功",
+      icon: "success",
+    });
+    Taro.switchTab({
+      url: "/pages/home/index",
     });
   }
 };

@@ -17,12 +17,34 @@ export enum MangerIndexActionType {
 
   /**删除场馆 */
   DELETE_CURRENT_VENUE = "DELETE_CURRENT_VENUE",
+
   /**删除课程 */
   DELETE_CURRENT_LESSION = "DELETE_CURRENT_LESSION",
   /**禁用课程 */
   DISABLE_CURRENT_LESSION = "DISABLE_CURRENT_LESSION",
   /**激活课程 */
   ENBALE_CURRENT_LESSION = "ENBALE_CURRENT_LESSION",
+
+  /**删除私教 */
+  DELETE_CURRENT_PERSION_TRALAR = "DELETE_CURRENT_PERSION_TRALAR",
+  /**禁用私教 */
+  DISABLE_CURRENT_PERSION_TRALAR = "DISABLE_CURRENT_PERSION_TRALAR",
+  /**激活私教 */
+  ENBALE_CURRENT_PERSION_TRALAR = "ENBALE_CURRENT_PERSION_TRALAR",
+
+  /**当前选中的模块 */
+  SET_CURRENT_MODULE = "SET_CURRENT_MODULE",
+}
+/**
+ * 模块类型
+ */
+export enum ListType {
+  /**场馆 */
+  venue,
+  /**课程 */
+  lession,
+  /**私教 */
+  persionTralar,
 }
 
 /** dispatch 参数类型 */
@@ -45,6 +67,8 @@ export interface ManagerIndexStateType {
   canloading: boolean;
   /**删除当前项的索引 */
   index: number;
+  /**当前选中的模块 */
+  currentModule: ListType;
 }
 
 const INITIAL_STATE: ManagerIndexStateType = {
@@ -53,6 +77,7 @@ const INITIAL_STATE: ManagerIndexStateType = {
   personTralarList: [],
   canloading: true,
   index: 0,
+  currentModule: 0,
 };
 
 export default function managerIndex(
@@ -66,25 +91,25 @@ export default function managerIndex(
       return {
         ...state,
         venueList: [...state.venueList, ...payload?.venueList!],
-        canloading: payload?.venueList!.length === 10,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.SEARCH_VENUE_LIST:
       return {
         ...state,
         venueList: payload?.venueList!,
-        canloading: true,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.CHECK_LESSION_LIST:
       return {
         ...state,
         lessionList: [...state.lessionList, ...payload?.lessionList!],
-        canloading: payload?.lessionList!.length === 10,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.RESET_LESSION_LIST:
       return {
         ...state,
         lessionList: payload?.lessionList!,
-        canloading: true,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.CHECK_PERSION_TRALAR_LIST:
       return {
@@ -93,13 +118,13 @@ export default function managerIndex(
           ...state.personTralarList,
           ...payload?.personTralarList!,
         ],
-        canloading: payload?.personTralarList!.length === 10,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.RESET_PERSION_TRALAR_LIST:
       return {
         ...state,
         personTralarList: payload?.personTralarList!,
-        canloading: true,
+        canloading: payload?.canloading,
       };
     case MangerIndexActionType.DELETE_CURRENT_VENUE:
       state.venueList.splice(payload?.index!, 1);
@@ -124,6 +149,29 @@ export default function managerIndex(
       return {
         ...state,
         lessionList: state.lessionList,
+      };
+    case MangerIndexActionType.SET_CURRENT_MODULE:
+      return {
+        ...state,
+        currentModule: payload?.currentModule,
+      };
+    case MangerIndexActionType.DELETE_CURRENT_PERSION_TRALAR:
+      state.personTralarList.splice(payload?.index!, 1);
+      return {
+        ...state,
+        personTralarList: state.personTralarList,
+      };
+    case MangerIndexActionType.ENBALE_CURRENT_PERSION_TRALAR:
+      state.personTralarList[payload?.index!].status = 1;
+      return {
+        ...state,
+        personTralarList: state.personTralarList,
+      };
+    case MangerIndexActionType.DISABLE_CURRENT_PERSION_TRALAR:
+      state.personTralarList[payload?.index!].status = 0;
+      return {
+        ...state,
+        personTralarList: state.personTralarList,
       };
     default:
       return state;
