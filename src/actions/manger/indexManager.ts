@@ -31,7 +31,7 @@ export const getVenueList = (params: GetListType) => async (
       type:
         params.pageNo === 1
           ? MangerIndexActionType.SEARCH_VENUE_LIST
-          : MangerIndexActionType.SET_VENUE_LIST,
+          : MangerIndexActionType.CHECK_VENUE_LIST,
       payload: { venueList: result.list, canloading: result.hasNextPage },
     });
   }
@@ -56,7 +56,6 @@ export const getLessonList = (params: GetListType) => async (
           : MangerIndexActionType.CHECK_LESSION_LIST,
       payload: { lessionList: result.list, canloading: result.hasNextPage },
     });
-    console.log("result.hasNextPage: ", result.hasNextPage);
   }
 };
 

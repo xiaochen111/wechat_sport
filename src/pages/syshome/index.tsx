@@ -270,7 +270,7 @@ const option = [
 const SysHome: Taro.FC = () => {
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [scrollTop, setScrollTop] = useState<number>(1);
+  const [scrollTop, setScrollTop] = useState<boolean>(false);
 
   const state: CombineType = useSelector((s: CombineType) => s);
   const {
@@ -313,7 +313,7 @@ const SysHome: Taro.FC = () => {
     } as ManagerIndexDispatchParams);
     initData(e.detail, { pageNo: 1 });
     setCurrentPage(1);
-    setScrollTop(0);
+    setScrollTop(!scrollTop);
   };
 
   const onScrollToLower = () => {
@@ -331,7 +331,7 @@ const SysHome: Taro.FC = () => {
 
       <ScrollView
         scrollY
-        scrollTop={scrollTop}
+        scrollTop={Number(scrollTop)}
         onScrollToLower={onScrollToLower}
         style={{ height: "calc(100vh - 96rpx - 110rpx)" }}
       >

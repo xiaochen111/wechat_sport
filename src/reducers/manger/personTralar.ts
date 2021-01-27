@@ -33,7 +33,7 @@ type PersonTralarDateRequire = Record<PersonTralarColoumn, JyObj>;
 export const checkPersonTralarColoumns: PersonTralarDateRequire = {
   address: { errMsg: "地址不能为空" },
   startTime: { errMsg: "开始时间不能为空" },
-  endTime: { errMsg: "介绍时间不能为空" },
+  endTime: { errMsg: "结束时间不能为空" },
   files: {
     errMsg: "场馆图片不能为空",
     patter: {

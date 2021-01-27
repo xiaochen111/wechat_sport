@@ -37,7 +37,7 @@ export const checkLessionColoumns: LessionDateRequire = {
   descriptMore: { errMsg: "请输入课程详细介绍" },
   address: { errMsg: "课程地址不能为空" },
   startTime: { errMsg: "开始时间不能为空" },
-  endTime: { errMsg: "介绍时间不能为空" },
+  endTime: { errMsg: "结束时间不能为空" },
   files: {
     errMsg: "场馆图片不能为空",
     patter: {

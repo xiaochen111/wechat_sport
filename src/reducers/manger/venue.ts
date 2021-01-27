@@ -46,7 +46,7 @@ export const checkColoumns: VenueDateRequire = {
     patter: { rege: /^((\d{3,4})|\d{3,4}-|s)?\d{7,14}$/, msg: "电话格式不对" },
   },
   startTime: { errMsg: "开始时间不能为空" },
-  endTime: { errMsg: "介绍时间不能为空" },
+  endTime: { errMsg: "结束时间不能为空" },
   description: { errMsg: "场地介绍不能为空" },
   gymType: { errMsg: "场馆类型不能为空" },
   files: {
@@ -104,7 +104,10 @@ const initialState: VenueStateType = {
   isEidt: false,
 };
 
-export default function venue(state = initialState, action: VenueAction) {
+export default function venue(
+  state: VenueStateType = initialState,
+  action: VenueAction
+) {
   const { payload, type } = action;
   switch (type) {
     case VenueType.SET_VENUN_PIC:

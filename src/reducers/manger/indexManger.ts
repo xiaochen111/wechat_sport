@@ -2,8 +2,8 @@
  *  action type 类型
  */
 export enum MangerIndexActionType {
-  /**添加场馆列表*/
-  SET_VENUE_LIST = "SET_VENUE_LIST",
+  /**查看场馆列表*/
+  CHECK_VENUE_LIST = "CHECK_VENUE_LIST",
   /**重新初始化场馆列表*/
   SEARCH_VENUE_LIST = "SEARCH_VENUE_LIST",
   /**查看课程列表*/
@@ -77,17 +77,17 @@ const INITIAL_STATE: ManagerIndexStateType = {
   personTralarList: [],
   canloading: true,
   index: 0,
-  currentModule: 0,
+  currentModule: ListType.venue,
 };
 
 export default function managerIndex(
-  state = INITIAL_STATE,
+  state: ManagerIndexStateType = INITIAL_STATE,
   action: ManagerIndexDispatchParams
 ) {
   const { payload, type } = action;
 
   switch (type) {
-    case MangerIndexActionType.SET_VENUE_LIST:
+    case MangerIndexActionType.CHECK_VENUE_LIST:
       return {
         ...state,
         venueList: [...state.venueList, ...payload?.venueList!],

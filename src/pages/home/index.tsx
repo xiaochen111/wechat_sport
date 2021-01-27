@@ -12,7 +12,6 @@ const IndexPage: Taro.FC = () => {
     (state: CombineType) => state.tabber
   );
   const { isManger } = tabber;
-  console.log("isManger: ", isManger);
 
   return <View>{isManger ? <SysHome /> : <HomePage />}</View>;
 };

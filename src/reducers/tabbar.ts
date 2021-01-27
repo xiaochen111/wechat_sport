@@ -1,3 +1,7 @@
+import Taro from "@tarojs/taro";
+import { PersonInfo } from "@/actions/login";
+
+const userInfo: PersonInfo = Taro.getStorageSync("userInfo");
 /**
  * tabbar action type 类型
  */
@@ -66,7 +70,7 @@ const INITIAL_STATE: TabbarStateType = {
       selectedIconPath: "../images/me-active.png",
     },
   ],
-  isManger: true,
+  isManger: userInfo.isAdmin === 1,
 };
 
 export default function tabber(state = INITIAL_STATE, action: TabbarAction) {

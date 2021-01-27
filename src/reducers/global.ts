@@ -1,6 +1,11 @@
+import Taro from "@tarojs/taro";
+import { PersonInfo } from "@/actions/login";
+
+const user: PersonInfo = Taro.getStorageSync("userInfo");
 export interface GlobalStateType {
   /**业务字典数据 */
   dictData: any;
+  userInfo: PersonInfo;
 }
 
 /**获取业务字典的key */
@@ -10,7 +15,10 @@ export enum dictKeyName {
 }
 
 export enum GlobalType {
+  /**设置业务字典数据 */
   SET_GLOBAL_DATA = "SET_GLOBAL_DATA",
+  /**设置个人信息 */
+  SET_USER_INFO = "SET_USER_INFO",
 }
 
 export interface GlobalAction {
@@ -20,15 +28,33 @@ export interface GlobalAction {
 
 const initialState: GlobalStateType = {
   dictData: {},
+  userInfo: {
+    headPic: user.headPic,
+    nick: user.nick,
+    token: user.token,
+    tokenKey: user.tokenKey,
+    isAdmin: user.isAdmin,
+  },
 };
 
-export default function login(state = initialState, action: GlobalAction) {
+export default function login(
+  state: GlobalStateType = initialState,
+  action: GlobalAction
+) {
   const { payload, type } = action;
   switch (type) {
     case GlobalType.SET_GLOBAL_DATA:
       return {
         ...state,
         dictData: payload!.dictData,
+      };
+    case GlobalType.SET_USER_INFO:
+      return {
+        ...state,
+        userInfo: {
+          ...state.userInfo,
+          ...payload?.userInfo!,
+        },
       };
     default:
       return state;

@@ -2,8 +2,8 @@
 import Taro from "@tarojs/taro";
 import { request } from "@/utils/request";
 import { Dispatch } from "redux";
-import { UserInfo } from "@/pages/authorize/login";
 import { setNav, TabbarAction } from "@/reducers/tabbar";
+import { UserInfo } from "@/pages/authorize/login";
 
 /**
  * 身份
@@ -19,6 +19,19 @@ enum identities {
   isWechat = 0,
 }
 
+export interface PersonInfo {
+  /**头像 */
+  headPic: string;
+  /**管理员标示 1-管理员 0-微信用户 */
+  isAdmin: number;
+  /**昵称 */
+  nick: string;
+  /**token */
+  token: string;
+  /**tokenKey */
+  tokenKey: string;
+}
+
 /**
  * 通过接口获取openid 和 sessionkey
  * @param code
@@ -29,15 +42,9 @@ export const asyncGetOpenIdAndSessionKey = (params: {
   iv: string;
 }) => async () => {
   const res = await request("/user/login/appletAutoLogin.do", params);
-  const {
-    success,
-    result: { tokenKey, token },
-  } = res;
+  const { success, result } = res;
   if (success) {
-    Taro.setStorageSync("userInfo", {
-      tokenKey,
-      token,
-    });
+    Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
       url: "/pages/home/index",
     });
@@ -52,15 +59,12 @@ export const doLogin = (params: UserInfo) => async (dispatch: Dispatch) => {
   const res = await request("/user/login/adminLogin.do", params);
   const { success, result } = res;
   if (success) {
-    const { isAdmin, tokenKey, token } = result;
+    const { isAdmin } = result;
     dispatch({
       type: setNav.SET_TABBAR_STYLE,
       payload: { isManger: isAdmin === identities.isManger },
     } as TabbarAction);
-    Taro.setStorageSync("userInfo", {
-      tokenKey,
-      token,
-    });
+    Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
       url: "/pages/home/index",
     });

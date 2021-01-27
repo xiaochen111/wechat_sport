@@ -1,4 +1,5 @@
 import Taro from "@tarojs/taro";
+import { PersonInfo } from "@/actions/login";
 
 // const baseUrl = "http://192.168.3.41:8082"; // 登录。授权
 // const baseUrl = "http://192.168.3.41:8877"; // 场馆
@@ -25,9 +26,7 @@ export const request = async (
   url: string,
   data?: object
 ): Promise<ResopnseType> => {
-  const userInfo: { tokenKey: string; token: string } = Taro.getStorageSync(
-    "userInfo"
-  );
+  const userInfo: PersonInfo = Taro.getStorageSync("userInfo");
   const header = userInfo ? { [userInfo.tokenKey]: userInfo.token } : {};
 
   try {
@@ -67,9 +66,7 @@ export const fileUploadRequest = async (
   url: string,
   data: any
 ): Promise<ResopnseType> => {
-  const userInfo: { tokenKey: string; token: string } = Taro.getStorageSync(
-    "userInfo"
-  );
+  const userInfo: PersonInfo = Taro.getStorageSync("userInfo");
   const header = {
     ...(userInfo ? { [userInfo.tokenKey]: userInfo.token } : {}),
     "content-type": "multipart/form-data",

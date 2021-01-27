@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: "SUPERMONKEY",
+  navigationBarTitleText: "轻活健康",
   navigationBarBackgroundColor: "#1a1a1a",
   navigationBarTextStyle: "white",
   usingComponents: {
