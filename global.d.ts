@@ -22,6 +22,7 @@ declare namespace JSX {
     "van-dropdown-item": any;
     "van-picker": any;
     "van-search": any;
+    "van-empty": any;
   }
 }
 

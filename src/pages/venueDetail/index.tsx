@@ -1,11 +1,23 @@
 import { Image, Swiper, SwiperItem, View } from "@tarojs/components";
-import React from "react";
-
-import { AtButton } from "taro-ui";
 import Taro from "@tarojs/taro";
+import React from "react";
+import { useSelector } from "react-redux";
+import { AtButton } from "taro-ui";
+import { CombineType } from "@/reducers";
+import { VenueDateType } from "@/reducers/manger/venue";
 import styles from "./index.module.scss";
 
 const VenuePage: Taro.FC = () => {
+  const state: CombineType = useSelector((s) => s);
+  const { home } = state;
+  const venueDetail: VenueDateType = home.venueDetail;
+
+  const toDetail = (type: "lession" | "sijiao") => {
+    Taro.navigateTo({
+      url: `/pages/shop/index?type=${type}`,
+    });
+  };
+
   return (
     <View>
       <Swiper
@@ -16,20 +28,18 @@ const VenuePage: Taro.FC = () => {
         indicatorDots
         autoplay
       >
-        <SwiperItem>
-          <View className={styles.swiperItem}>场馆图片1</View>
-        </SwiperItem>
-        <SwiperItem>
-          <View className={styles.swiperItem}>场馆图片2</View>
-        </SwiperItem>
-        <SwiperItem>
-          <View className={styles.swiperItem}>场馆图片3</View>
-        </SwiperItem>
+        {venueDetail.files.map((item: any) => (
+          <SwiperItem key={item.id}>
+            <View className={styles.swiperItem}>
+              <Image src={item.fileAllPath} style={{ width: "100%" }} />
+            </View>
+          </SwiperItem>
+        ))}
       </Swiper>
 
       <View className={styles.cantact}>
-        <View>地址:上海浦东新区。。</View>
-        <View>电话：021-2323332332</View>
+        <View>地址: {venueDetail.address}</View>
+        <View>电话: {venueDetail.tel}</View>
       </View>
 
       <View className={styles.listContainer}>
@@ -38,12 +48,15 @@ const VenuePage: Taro.FC = () => {
             <Image src="http://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png" />
             <View className={styles.intro}>
               <View className={styles.lession}>私教</View>
-              <View className={styles.datePrice}>¥200</View>
             </View>
           </View>
           <View>
-            <AtButton size="small" type="primary">
-              预定
+            <AtButton
+              size="small"
+              type="primary"
+              onClick={() => toDetail("sijiao")}
+            >
+              查看
             </AtButton>
           </View>
         </View>
@@ -51,22 +64,23 @@ const VenuePage: Taro.FC = () => {
           <View className={styles.introLeft}>
             <Image src="http://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png" />
             <View className={styles.intro}>
-              <View className={styles.lession}>舞蹈</View>
-              <View className={styles.datePrice}>12:00~14:00</View>
+              <View className={styles.lession}>课程</View>
             </View>
           </View>
           <View>
-            <AtButton size="small" type="primary">
-              预定
+            <AtButton
+              size="small"
+              type="primary"
+              onClick={() => toDetail("lession")}
+            >
+              查看
             </AtButton>
           </View>
         </View>
 
         <View className={styles.lessionTitle}>场地介绍</View>
         <View className={styles.module}>
-          <View className={styles.lessionIntro}>
-            课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍
-          </View>
+          <View className={styles.lessionIntro}>{venueDetail.description}</View>
         </View>
       </View>
     </View>

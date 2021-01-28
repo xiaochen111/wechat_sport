@@ -10,6 +10,7 @@ import { VenueDateType } from "@/reducers/manger/venue";
 import { areaList } from "@/utils/area";
 import { dictKeyName } from "@/reducers/global";
 import styles from "./index.module.scss";
+import { cloneDeep } from 'lodash'
 
 const customStyle = "height: 60%; background:#1a1a1a; color:#fff;";
 
@@ -25,6 +26,7 @@ const BtnGroup: Taro.FC<{
   const home: HomeStateType = useSelector((state) => state.home);
   const dispatch = useDispatch();
   const { currentArea, theme } = home;
+  console.log('currentArea: ', currentArea);
 
   const handleBtn = (id: string) => {
     if (type === "area") {
@@ -43,13 +45,16 @@ const BtnGroup: Taro.FC<{
       } as HomeAction);
     }
   };
+  
+  const list = cloneDeep(data);
+  list.unshift({value:'全部',id:''})
 
   return (
     <View className={styles.btnGroup}>
-      {data.map((item: AreaItem) => (
+      {list.map((item: AreaItem) => (
         <AtButton
           type={
-            currentArea === item.id || theme === item.id
+            (type ==='area' && currentArea === item.id || type ==='type' && theme === item.id)
               ? "primary"
               : "secondary"
           }
@@ -128,11 +133,11 @@ const HomePage: Taro.FC = () => {
   };
 
   const toDetail = (item: any) => {
-    Taro.navigateTo({ url: "/pages/shop/index" });
     dispatch({
       type: homeType.SET_CURRENT_VENUE_VALUE,
       payload: { venueDetail: item },
     } as HomeAction);
+    Taro.navigateTo({ url: "/pages/venueDetail/index" });
   };
 
   const currentTheme =
@@ -186,15 +191,18 @@ const HomePage: Taro.FC = () => {
             </View>
           ))}
         </View>
-        <AtLoadMore
-          // customStyle="background:#fff; height:40px;"
-          customStyle={{background:'transparent', height:40, color:'#fff' }}
-          status={
-            (!canloading && "noMore") ||
-            (canloading && "more") ||
-            ((loadingReducer as any).listLoading && "loading")
-          }
-        />
+        {
+          venueList.length === 0 ?
+          <van-empty/>:
+          <AtLoadMore
+            customStyle={{background:'transparent', height:40, color:'#fff' }}
+            status={
+              (!canloading && "noMore") ||
+              (canloading && "more") ||
+              ((loadingReducer as any).listLoading && "loading")
+            }
+          />
+        }
       </ScrollView>
       <van-popup
         show={show}

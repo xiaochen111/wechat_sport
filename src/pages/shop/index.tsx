@@ -1,5 +1,5 @@
 import { Image, Swiper, SwiperItem, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { getCurrentInstance } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 import { AtButton, AtMessage } from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
@@ -65,22 +65,25 @@ const Tabs: Taro.FC<{
       </View>
 
       <View className={styles.listContainer}>
-        {lessionList.map((item: LessionStateType) => (
-          <View className={styles.item} key={item.id}>
-            <View className={styles.introLeft} onClick={()=> toDetail(item)}>
-              <Image src={item.mainPicUrl}/>
-              <View className={styles.intro}>
-                <View className={styles.lession}>{item.name}</View>
-                <View className={styles.datePrice}>{item.startTime}-{item.endTime}</View>
+        { 
+          lessionList.length ? lessionList.map((item: LessionStateType) => (
+            <View className={styles.item} key={item.id}>
+              <View className={styles.introLeft} onClick={()=> toDetail(item)}>
+                <Image src={item.mainPicUrl}/>
+                <View className={styles.intro}>
+                  <View className={styles.lession}>{item.name}</View>
+                  <View className={styles.datePrice}>{item.startTime}-{item.endTime}</View>
+                </View>
+              </View>
+              <View>
+                <AtButton size="small" type="primary" onClick={()=> Taro.atMessage({message:'开发中,敬请期待'})}>
+                  预定
+                </AtButton>
               </View>
             </View>
-            <View>
-              <AtButton size="small" type="primary" onClick={()=> Taro.atMessage({message:'开发中,敬请期待'})}>
-                预定
-              </AtButton>
-            </View>
-          </View>
-        ))}
+          )):
+          <van-empty/>
+        }
       </View>
     </View>
   );
@@ -120,7 +123,13 @@ const ShopPage: Taro.FC = () => {
   // useDidShow(()=>{})
 
   useEffect(()=>{
-    initLessionData({pageNo:1,venueId:venueDetail.id,date:tabList[0].fullDate,pageSize:100})
+    const params = getCurrentInstance().router?.params
+    setCurrentType(params?.type as 'lession'|'sijiao');
+    if(params?.type === 'sijiao'){
+      initTralarData({pageNo:1,pageSize:100})
+    }else{
+      initLessionData({pageNo:1,venueId:venueDetail.id,date:tabList[0].fullDate,pageSize:100})
+    }
   },[])
 
   /**初始化课程列表 */
