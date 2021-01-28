@@ -2,6 +2,8 @@ import { Image, Swiper, SwiperItem, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import React, { useState } from "react";
 import { AtButton } from "taro-ui";
+import { useDispatch, useSelector } from "react-redux";
+import { CombineType } from "@/reducers";
 import styles from "./index.module.scss";
 import Tabs from "./Tabs";
 
@@ -30,6 +32,7 @@ const Trainer: Taro.FC = () => {
 
 const ShopPage: Taro.FC = () => {
   const [current, setCurrent] = useState<number>(0);
+  const state: CombineType = useSelector((s) => s);
   return (
     <View>
       <Swiper
@@ -78,18 +81,5 @@ const ShopPage: Taro.FC = () => {
     </View>
   );
 };
-
-// Taro.setNavigationBarTitle({
-//   title: "SHOP",
-// });
-
-// Taro.setNavigationBarColor({
-//   frontColor: "#ffffff",
-//   backgroundColor: "#1a1a1a",
-//   animation: {
-//     duration: 400,
-//     timingFunc: "easeIn",
-//   },
-// });
 
 export default ShopPage;

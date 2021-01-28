@@ -40,10 +40,15 @@ export const asyncGetOpenIdAndSessionKey = (params: {
   code: string;
   encryptedData: string;
   iv: string;
-}) => async () => {
+}) => async (dispatch: Dispatch) => {
   const res = await request("/user/login/appletAutoLogin.do", params);
   const { success, result } = res;
   if (success) {
+    const { isAdmin } = result;
+    dispatch({
+      type: setNav.SET_TABBAR_STYLE,
+      payload: { isManger: isAdmin === identities.isManger },
+    } as TabbarAction);
     Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
       url: "/pages/home/index",

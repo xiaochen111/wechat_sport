@@ -20,10 +20,10 @@ import {
   checkColoumns,
 } from "@/reducers/manger/venue";
 // import dayjs from "dayjs";
-import { getDictData } from "@/actions/global";
 import { dictKeyName, GlobalStateType } from "@/reducers/global";
 import { cloneDeep } from "lodash";
 import { checkValue } from "@/utils/commom";
+import { areaList } from "@/utils/area";
 import styles from "./index.module.scss";
 
 type NeedSet =
@@ -33,33 +33,6 @@ type NeedSet =
   | "jifeileixing"
   | "gymType";
 type NeedSetMap = Record<NeedSet, any>;
-
-const areaList = {
-  province_list: {
-    310000: "上海市",
-  },
-  city_list: {
-    310100: "上海市",
-  },
-  county_list: {
-    310101: "黄浦区",
-    310104: "徐汇区",
-    310105: "长宁区",
-    310106: "静安区",
-    310107: "普陀区",
-    310109: "虹口区",
-    310110: "杨浦区",
-    310112: "闵行区",
-    310113: "宝山区",
-    310114: "嘉定区",
-    310115: "浦东新区",
-    310116: "金山区",
-    310117: "松江区",
-    310118: "青浦区",
-    310120: "奉贤区",
-    310151: "崇明区",
-  },
-};
 
 const customStyle = "background:#1a1a1a; color:#fff;";
 
@@ -79,9 +52,6 @@ const VenuePage: Taro.FC = () => {
   const { venueData, isEidt } = venue as VenueStateType;
 
   useEffect(() => {
-    dispatch({
-      thunk: getDictData(),
-    });
     if (isEidt) {
       const {
         city,

@@ -73,8 +73,8 @@
           "scene": null
         },
         {
-          "name": "pages/authorize/login/index",
-          "pathName": "pages/authorize/login/index",
+          "name": "授权",
+          "pathName": "pages/authorize/index",
           "query": "",
           "scene": null
         },
@@ -93,6 +93,7 @@
         {
           "name": "pages/home/index",
           "pathName": "pages/home/index",
+          "query": "",
           "scene": null
         }
       ]

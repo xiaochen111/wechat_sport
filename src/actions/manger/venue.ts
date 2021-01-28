@@ -39,7 +39,7 @@ export const fileUplad = (
  */
 export const addVenue = (params: any) => async () => {
   const res = await request("/gym/venueForAdmin/addVenue.admin", params);
-  const { success, result } = res;
+  const { success } = res;
   if (success) {
     Taro.showToast({
       title: "添加成功",
@@ -56,7 +56,7 @@ export const addVenue = (params: any) => async () => {
  */
 export const editVenue = (params: any) => async () => {
   const res = await request("/gym/venueForAdmin/updateVenue.admin", params);
-  const { success, result } = res;
+  const { success } = res;
   if (success) {
     Taro.showToast({
       title: "修改成功",

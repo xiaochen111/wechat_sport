@@ -1,33 +1,22 @@
 import { Image, ScrollView, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useDidShow } from "@tarojs/taro";
 import React, { useState } from "react";
-import { AtButton, AtTabBar } from "taro-ui";
+import { AtButton, AtLoadMore, AtTabBar } from "taro-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { Dispatch } from "redux";
 import { HomeAction, HomeStateType, homeType } from "@/reducers/home";
+import { CombineType } from "@/reducers";
+import { getHomeVenueList, ParamsVenueList } from "@/actions/home";
+import { VenueDateType } from "@/reducers/manger/venue";
+import { areaList } from "@/utils/area";
+import { dictKeyName } from "@/reducers/global";
 import styles from "./index.module.scss";
 
 const customStyle = "height: 60%; background:#1a1a1a; color:#fff;";
 
-type AreaItem = { name: string; id: number };
-const areaList: AreaItem[] = [
-  {
-    name: "浦东新区",
-    id: 0,
-  },
-  {
-    name: "杨浦",
-    id: 1,
-  },
-  {
-    name: "静安",
-    id: 2,
-  },
-  {
-    name: "嘉定",
-    id: 3,
-  },
-];
+type AreaItem = { value: string; id: string };
+const areaTypeList = Object.entries(
+  areaList.county_list
+)?.map((item: [string, string]) => ({ value: item[1], id: item[0] }));
 
 const BtnGroup: Taro.FC<{
   type: "area" | "type";
@@ -35,14 +24,21 @@ const BtnGroup: Taro.FC<{
 }> = ({ data, type }) => {
   const home: HomeStateType = useSelector((state) => state.home);
   const dispatch = useDispatch();
-  const { currentArea } = home;
+  const { currentArea, theme } = home;
 
-  const handleBtn = (id: number) => {
+  const handleBtn = (id: string) => {
     if (type === "area") {
       dispatch({
         type: homeType.SET_CURRENT_AREA,
         payload: {
           currentArea: id,
+        },
+      } as HomeAction);
+    } else {
+      dispatch({
+        type: homeType.SET_CURRENT_THEME,
+        payload: {
+          theme: id,
         },
       } as HomeAction);
     }
@@ -52,13 +48,17 @@ const BtnGroup: Taro.FC<{
     <View className={styles.btnGroup}>
       {data.map((item: AreaItem) => (
         <AtButton
-          type={currentArea === item.id ? "primary" : "secondary"}
+          type={
+            currentArea === item.id || theme === item.id
+              ? "primary"
+              : "secondary"
+          }
           size="small"
           full
           key={item.id}
           onClick={() => handleBtn(item.id)}
         >
-          {item.name}
+          {item.value}
         </AtButton>
       ))}
     </View>
@@ -66,45 +66,113 @@ const BtnGroup: Taro.FC<{
 };
 
 const HomePage: Taro.FC = () => {
-  const home: HomeStateType = useSelector((state) => state.home);
+  const state: CombineType = useSelector((s) => s);
   const dispatch = useDispatch();
-  const { list, currentArea } = home;
+  const {
+    home: { venueList, currentArea, canloading, theme },
+    loadingReducer = {},
+    global: { dictData },
+  } = state;
 
   const [show, setShow] = useState<boolean>(false);
   const [active, setActive] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [scrollTop, setScrollTop] = useState<boolean>(false);
+  //点击确定时 才真正的传参
+  const [comformParams, setComformParams] = useState<{
+    currentArea: any;
+    theme: any;
+  }>({ currentArea, theme });
 
-  const onScrollToLower = () => {
-    console.log("onScrollToLower: ", onScrollToLower);
+  useDidShow(() => {
+    initPage({
+      pageNo: 1,
+      district: comformParams.currentArea,
+      gymType: comformParams.theme,
+    });
+  });
+
+  const initPage = (params: ParamsVenueList) => {
+    dispatch({
+      thunk: getHomeVenueList(params),
+      name: "listLoading",
+    });
   };
 
+  const onScrollToLower = () => {
+    if (canloading) {
+      setCurrentPage(currentPage + 1);
+      initPage({
+        pageNo: currentPage + 1,
+        district: comformParams.currentArea,
+        gymType: comformParams.theme,
+      });
+    }
+  };
+
+  const comfirmSubmit = () => {
+    initPage({
+      pageNo: 1,
+      district: currentArea,
+      gymType: theme,
+    });
+    setCurrentPage(1);
+    setScrollTop(!scrollTop);
+    setShow(false);
+    setComformParams({ theme, currentArea });
+  };
+
+  const handelTabClick = (i: number) => {
+    setShow(true);
+    setActive(i);
+  };
+
+  const toDetail = (item: any) => {
+    Taro.navigateTo({ url: "/pages/shop/index" });
+    dispatch({
+      type: homeType.SET_CURRENT_VENUE_VALUE,
+      payload: { venueDetail: item },
+    } as HomeAction);
+  };
+
+  const currentTheme =
+    dictData[dictKeyName.GYM_TYPE]?.filter(
+      (item: any) => item.id === comformParams.theme
+    )[0] || {};
   return (
     <View className={styles.home}>
       <AtTabBar
         backgroundColor="#1a1a1a"
         color="#fff"
         tabList={[
-          { title: "上海全城", iconType: "chevron-down" },
-          { title: "门店主题", iconType: "chevron-down" },
+          {
+            title:
+              areaList.county_list[comformParams.currentArea] || "上海全城",
+            iconType: "chevron-down",
+          },
+          {
+            title: currentTheme.value || "门店主题",
+            iconType: "chevron-down",
+          },
         ]}
-        onClick={() => setShow(true)}
+        onClick={handelTabClick}
         current={3}
       />
       <ScrollView
         scrollY
+        scrollTop={Number(scrollTop)}
         onScrollToLower={onScrollToLower}
         style={{ height: "calc(100vh - 96rpx - 110rpx)" }}
       >
         <View className={styles.scrollview}>
-          {list.map((item: any, index: number) => (
+          {venueList.map((item: VenueDateType, index: number) => (
             <View
               className={styles.cardItem}
               key={index}
-              // onClick={() => dispatch({ type: "ADD" } as AnyAction)}
-              // onClick={() => dispatch({ type: homeType.SET_LIST })}
-              onClick={() => Taro.navigateTo({ url: "/pages/shop/index" })}
+              onClick={() => toDetail(item)}
             >
               <Image
-                src={require("@/images/jianshen.jpg")}
+                src={item.mainPicUrl}
                 style={{
                   width: "100%",
                   height: "200rpx",
@@ -112,12 +180,20 @@ const HomePage: Taro.FC = () => {
                 }}
               />
               <View className={styles.textContainer}>
-                <View>上海东昌路店</View>
-                <View>上海世纪大道1200号</View>
+                <View>{item.name}</View>
+                <View>{item.address}</View>
               </View>
             </View>
           ))}
         </View>
+        <AtLoadMore
+          customStyle="background:#fff; height:40px;"
+          status={
+            (!canloading && "noMore") ||
+            (canloading && "more") ||
+            ((loadingReducer as any).listLoading && "loading")
+          }
+        />
       </ScrollView>
       <van-popup
         show={show}
@@ -142,16 +218,16 @@ const HomePage: Taro.FC = () => {
             </Text>
           </View>
           <View>
-            <AtButton type="primary" size="small">
+            <AtButton type="primary" size="small" onClick={comfirmSubmit}>
               确定
             </AtButton>
           </View>
         </View>
 
         {active === 0 ? (
-          <BtnGroup type="area" data={areaList} />
+          <BtnGroup type="area" data={areaTypeList} />
         ) : (
-          <View>oop</View>
+          <BtnGroup type="type" data={dictData[dictKeyName.GYM_TYPE]} />
         )}
       </van-popup>
     </View>

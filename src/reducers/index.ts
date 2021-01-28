@@ -10,6 +10,10 @@ import global from "./global";
 import managerIndex from "./manger/indexManger";
 import personTralar from "./manger/personTralar";
 
+type DeepNoPartial<T> = {
+  [U in keyof T]: T[U] extends object ? DeepNoPartial<T[U]> : T[U];
+};
+
 const combine = combineReducers({
   loadingReducer,
   counter,
@@ -24,5 +28,6 @@ const combine = combineReducers({
 });
 
 export type CombineType = ReturnType<typeof combine>;
+// export type CombineType = DeepNoPartial<ReturnType<typeof combine>>;
 
 export default combine;

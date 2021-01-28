@@ -88,6 +88,10 @@ export interface LessionAction {
   payload?: Partial<LessionAllStateType>;
 }
 
+// type DeepPartial<T> = {
+//   [U in keyof T]?: T[U] extends object ? DeepPartial<T[U]> : T[U];
+// };
+
 /**场馆管理redux 数据 */
 const initialState: LessionAllStateType = {
   lessionData: { status: 0 } as LessionStateType,
