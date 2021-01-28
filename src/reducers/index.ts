@@ -9,6 +9,7 @@ import lession from "./manger/lession";
 import global from "./global";
 import managerIndex from "./manger/indexManger";
 import personTralar from "./manger/personTralar";
+import shop from './shop'
 
 type DeepNoPartial<T> = {
   [U in keyof T]: T[U] extends object ? DeepNoPartial<T[U]> : T[U];
@@ -25,6 +26,7 @@ const combine = combineReducers({
   global,
   managerIndex,
   personTralar,
+  shop
 });
 
 export type CombineType = ReturnType<typeof combine>;

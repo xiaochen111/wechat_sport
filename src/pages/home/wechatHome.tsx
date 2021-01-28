@@ -187,7 +187,8 @@ const HomePage: Taro.FC = () => {
           ))}
         </View>
         <AtLoadMore
-          customStyle="background:#fff; height:40px;"
+          // customStyle="background:#fff; height:40px;"
+          customStyle={{background:'transparent', height:40, color:'#fff' }}
           status={
             (!canloading && "noMore") ||
             (canloading && "more") ||

@@ -1,9 +1,16 @@
 import { Image, Swiper, SwiperItem, View } from "@tarojs/components";
-import React from "react";
 import Taro from "@tarojs/taro";
+import { CombineType } from "@/reducers";
+import React from "react";
+import { useSelector } from "react-redux";
 import styles from "./index.module.scss";
 
 const CoachPage: Taro.FC = () => {
+  const state: CombineType = useSelector((s) => s);
+  const {
+    shop: { currentLession },
+  } = state;
+
   return (
     <View>
       <Swiper
@@ -14,26 +21,24 @@ const CoachPage: Taro.FC = () => {
         indicatorDots
         autoplay
       >
-        <SwiperItem>
-          <View className={styles.swiperItem}>教练图1</View>
-        </SwiperItem>
-        <SwiperItem>
-          <View className={styles.swiperItem}>教练图2</View>
-        </SwiperItem>
-        <SwiperItem>
-          <View className={styles.swiperItem}>教练图3</View>
-        </SwiperItem>
+        {currentLession.files.map((item: any) => (
+          <SwiperItem key={item.id}>
+            <View className={styles.swiperItem}>
+              <Image src={item.fileAllPath} style={{ width: "100%" }} />
+            </View>
+          </SwiperItem>
+        ))}
       </Swiper>
 
       <View className={styles.mainContainer}>
         <View className={styles.lessionTitle}>课程详情</View>
         <View className={styles.module}>
           <View className={styles.introLeft}>
-            <Image src="http://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png" />
+            <Image src={currentLession.mainPicUrl} />
             <View className={styles.intro}>
-              <View className={styles.lession}>私教</View>
+              <View className={styles.lession}>{currentLession.name}</View>
               <View className={styles.datePrice}>
-                私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍私教介绍
+                {currentLession.descript}
               </View>
             </View>
           </View>
@@ -42,28 +47,30 @@ const CoachPage: Taro.FC = () => {
               <van-icon name="location-o" />
               地点：
             </View>
-            <View className={styles.value}>上海浦东新区。。。</View>
+            <View className={styles.value}>{currentLession.address}</View>
           </View>
           <View className={styles.labelValue}>
             <View className={styles.label}>
               <van-icon name="balance-o" />
               价格目录：
             </View>
-            <View className={styles.value}>20课 30/40时</View>
+            <View className={styles.value}>{currentLession.price}</View>
           </View>
           <View className={styles.labelValue}>
             <View className={styles.label}>
               <van-icon name="clock-o" />
               时间：
             </View>
-            <View className={styles.value}>根据线下时间计算费用</View>
+            <View className={styles.value}>
+              {currentLession.startTime}-{currentLession.endTime}
+            </View>
           </View>
         </View>
 
         <View className={styles.lessionTitle}>课程介绍</View>
         <View className={styles.module}>
           <View className={styles.lessionIntro}>
-            课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍
+            {currentLession.descriptMore}
           </View>
         </View>
       </View>
