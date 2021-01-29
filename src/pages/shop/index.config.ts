@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: "SHOP",
+  navigationBarTitleText: "详情",
   navigationBarBackgroundColor: "#1a1a1a",
   navigationBarTextStyle: "white",
   usingComponents: {

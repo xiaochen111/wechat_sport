@@ -1,5 +1,5 @@
 /**个人用户信息 */
-interface MyInfo {
+export interface MyInfo {
   /**用户名(不能修改) */
   userName: string;
   /**头像 */
@@ -23,11 +23,14 @@ export interface MeStateType {
 export enum MeType {
   /**设置我的信息 */
   SET_MYINFO = "SET_MYINFO",
+  /**修改值 */
+  CHANGE_USER_INFO = "CHANGE_USER_INFO",
 }
 
 export interface MeAction {
   type: MeType;
-  payload?: Partial<MeStateType>;
+  payload?: Partial<MeStateType> &
+    Partial<{ column: keyof MyInfo; value: any }>;
 }
 
 const initialState: MeStateType = {
@@ -44,6 +47,14 @@ export default function me(
       return {
         ...state,
         myInfo: payload!.myInfo!,
+      };
+    case MeType.CHANGE_USER_INFO:
+      return {
+        ...state,
+        myInfo: {
+          ...state.myInfo,
+          [payload?.column!]: payload?.value!,
+        },
       };
     default:
       return state;

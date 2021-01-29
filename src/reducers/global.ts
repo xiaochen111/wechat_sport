@@ -21,9 +21,13 @@ export enum GlobalType {
   SET_USER_INFO = "SET_USER_INFO",
 }
 
+type DeepPartial<T> = {
+  [U in keyof T]?: T[U] extends object ? DeepPartial<T[U]> : T[U];
+};
+
 export interface GlobalAction {
   type: GlobalType;
-  payload?: Partial<GlobalStateType>;
+  payload?: DeepPartial<GlobalStateType>;
 }
 
 const initialState: GlobalStateType = {
@@ -37,7 +41,7 @@ const initialState: GlobalStateType = {
   },
 };
 
-export default function login(
+export default function global(
   state: GlobalStateType = initialState,
   action: GlobalAction
 ) {

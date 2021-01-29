@@ -4,6 +4,7 @@ import { request } from "@/utils/request";
 import { Dispatch } from "redux";
 import { setNav, TabbarAction } from "@/reducers/tabbar";
 import { UserInfo } from "@/pages/authorize/login";
+import { GlobalAction, GlobalType } from "@/reducers/global";
 
 /**
  * 身份
@@ -44,11 +45,15 @@ export const asyncGetOpenIdAndSessionKey = (params: {
   const res = await request("/user/login/appletAutoLogin.do", params);
   const { success, result } = res;
   if (success) {
-    const { isAdmin } = result;
+    const { isAdmin, headPic, nick } = result as PersonInfo;
     dispatch({
       type: setNav.SET_TABBAR_STYLE,
       payload: { isManger: isAdmin === identities.isManger },
     } as TabbarAction);
+    dispatch({
+      type: GlobalType.SET_USER_INFO,
+      payload: { userInfo: { nick, headPic } },
+    } as GlobalAction);
     Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
       url: "/pages/home/index",
@@ -64,11 +69,15 @@ export const doLogin = (params: UserInfo) => async (dispatch: Dispatch) => {
   const res = await request("/user/login/adminLogin.do", params);
   const { success, result } = res;
   if (success) {
-    const { isAdmin } = result;
+    const { isAdmin, nick, headPic } = result as PersonInfo;
     dispatch({
       type: setNav.SET_TABBAR_STYLE,
       payload: { isManger: isAdmin === identities.isManger },
     } as TabbarAction);
+    dispatch({
+      type: GlobalType.SET_USER_INFO,
+      payload: { userInfo: { nick, headPic } },
+    } as GlobalAction);
     Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
       url: "/pages/home/index",

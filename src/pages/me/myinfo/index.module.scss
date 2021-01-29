@@ -1,16 +1,45 @@
 .infoMain {
+  box-sizing: border-box;
+  padding-right: 20px;
+
   .avatar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
     margin-left: 30px;
+    padding: 20px 0 20px 0;
     border-bottom: 1PX solid #d6e4ef;
 
     :global {
       .at-image-picker {
         width: 200px;
       }
+
+      .at-image-picker__remove-btn {
+        display: none;
+      }
     }
+
+    .img {
+      width: 150px;
+      height: 150px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
+
+  :global {
+    .at-input__input {
+      text-align: right;
+    }
+
+    .at-input--disabled {
+      opacity: 1;
+    }
+  }
+
+  .btn {
+    margin: 60px 0 0 20px;
   }
 }

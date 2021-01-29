@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: "COACH DEFTAIL",
+  navigationBarTitleText: "课程详情",
   navigationBarBackgroundColor: "#1a1a1a",
   navigationBarTextStyle: "white",
   usingComponents: {

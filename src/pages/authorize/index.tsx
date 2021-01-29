@@ -12,14 +12,16 @@ const AuthorizePage: Taro.FC = () => {
   const loadingReducer = useSelector((state) => state.loadingReducer);
 
   const getUserInfo = (e: any) => {
-    dispatch({
-      thunk: asyncGetOpenIdAndSessionKey({
-        code,
-        iv: e.detail.iv,
-        encryptedData: e.detail.encryptedData,
-      }),
-      name: "getUserLoading",
-    });
+    if (e.detail.iv) {
+      dispatch({
+        thunk: asyncGetOpenIdAndSessionKey({
+          code,
+          iv: e.detail.iv,
+          encryptedData: e.detail.encryptedData,
+        }),
+        name: "getUserLoading",
+      });
+    }
   };
 
   useDidShow(() => {
