@@ -1,4 +1,4 @@
-export interface VenueDateType {
+interface VenueVo {
   /**场馆名称 */
   name: string;
   /**省 */
@@ -25,10 +25,13 @@ export interface VenueDateType {
   mainPic: any[];
   /**上传的图片  */
   files: any[];
+}
+
+export interface VenueDateType extends VenueVo {
   [key: string]: any;
 }
 
-export type VenueColoumn = keyof VenueDateType;
+export type VenueColoumn = keyof VenueVo;
 export type JyObj = {
   errMsg: string;
   patter?: { rege?: RegExp; fn?: (parms: any) => boolean; msg: string };

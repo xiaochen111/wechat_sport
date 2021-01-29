@@ -1,6 +1,6 @@
 import { JyObj } from "./venue";
 
-export interface LessionStateType {
+interface LessionStateVo {
   /**关联场馆 */
   venueId: string;
   /**课程名称 */
@@ -23,10 +23,12 @@ export interface LessionStateType {
   files: any[];
   /**1-正常 0-关闭 */
   status: number;
+}
+export interface LessionStateType extends LessionStateVo {
   [key: string]: any;
 }
 
-export type LessionKeys = keyof LessionStateType;
+export type LessionKeys = keyof LessionStateVo;
 
 type LessionDateRequire = Record<LessionKeys, JyObj>;
 /**校验字端 */

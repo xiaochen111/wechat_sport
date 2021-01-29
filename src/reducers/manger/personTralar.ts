@@ -1,6 +1,6 @@
 import { JyObj } from "./venue";
 
-export interface PersonTralarDateType {
+interface PersonTralarDateVo {
   /**关联场馆 */
   venueId: string;
   /**私教主题 */
@@ -25,10 +25,13 @@ export interface PersonTralarDateType {
   files: any[];
   /**1-正常 0-关闭 */
   status: number;
+}
+
+export interface PersonTralarDateType extends PersonTralarDateVo {
   [key: string]: any;
 }
 
-export type PersonTralarColoumn = keyof PersonTralarDateType;
+export type PersonTralarColoumn = keyof PersonTralarDateVo;
 
 /**校验字端 */
 type PersonTralarDateRequire = Record<PersonTralarColoumn, JyObj>;

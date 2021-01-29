@@ -45,14 +45,14 @@ export const asyncGetOpenIdAndSessionKey = (params: {
   const res = await request("/user/login/appletAutoLogin.do", params);
   const { success, result } = res;
   if (success) {
-    const { isAdmin, headPic, nick } = result as PersonInfo;
+    const { isAdmin } = result as PersonInfo;
     dispatch({
       type: setNav.SET_TABBAR_STYLE,
       payload: { isManger: isAdmin === identities.isManger },
     } as TabbarAction);
     dispatch({
       type: GlobalType.SET_USER_INFO,
-      payload: { userInfo: { nick, headPic } },
+      payload: { userInfo: result },
     } as GlobalAction);
     Taro.setStorageSync("userInfo", result);
     Taro.switchTab({
@@ -69,14 +69,14 @@ export const doLogin = (params: UserInfo) => async (dispatch: Dispatch) => {
   const res = await request("/user/login/adminLogin.do", params);
   const { success, result } = res;
   if (success) {
-    const { isAdmin, nick, headPic } = result as PersonInfo;
+    const { isAdmin } = result as PersonInfo;
     dispatch({
       type: setNav.SET_TABBAR_STYLE,
       payload: { isManger: isAdmin === identities.isManger },
     } as TabbarAction);
     dispatch({
       type: GlobalType.SET_USER_INFO,
-      payload: { userInfo: { nick, headPic } },
+      payload: { userInfo: result },
     } as GlobalAction);
     Taro.setStorageSync("userInfo", result);
     Taro.switchTab({

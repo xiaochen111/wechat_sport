@@ -128,7 +128,7 @@ const VenuePage: Taro.FC = () => {
         dispatch({
           type: PersonTarlarType.SET_PERSON_TRALAR_VALUE,
           payload: { coloum, value },
-        } as PersonTralarAction);
+        });
     }
   };
 

@@ -11,12 +11,15 @@ interface ResopnseType {
   /**返回信息 */
   msg: string;
   /**返回状态码 */
-  code: number;
+  code: string;
   /**返回是否成功 */
   success: boolean;
   /**返回对象 */
   result: any;
 }
+
+/**未登录 */
+const notLogin = "-1";
 
 /**
  *
@@ -38,7 +41,12 @@ export const request = async (
       header,
       // timeout: 10000,
     });
-    const { data: response } = res;
+    const { data: response } = res as { data: ResopnseType };
+
+    if (response.code === notLogin) {
+      Taro.setStorageSync("userInfo", "");
+      Taro.navigateTo({ url: "/pages/authorize/index" });
+    }
     if (!response.success) {
       Taro.showToast({
         title: response.msg || "接口返回错误",
