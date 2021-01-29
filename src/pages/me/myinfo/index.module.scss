@@ -1,0 +1,16 @@
+.infoMain {
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    margin-left: 30px;
+    border-bottom: 1PX solid #d6e4ef;
+
+    :global {
+      .at-image-picker {
+        width: 200px;
+      }
+    }
+  }
+}

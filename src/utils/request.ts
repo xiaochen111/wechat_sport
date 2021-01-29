@@ -29,7 +29,6 @@ export const request = async (
   const userInfo: PersonInfo = Taro.getStorageSync("userInfo");
   const header = userInfo ? { [userInfo.tokenKey]: userInfo.token } : {};
 
-  console.log('baseUrl + url: ', baseUrl + url);
   try {
     const res = await Taro.request({
       url: baseUrl + url,

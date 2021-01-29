@@ -95,6 +95,18 @@
           "pathName": "pages/home/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "我",
+          "pathName": "pages/me/index/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "个人信息",
+          "pathName": "pages/me/myinfo/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

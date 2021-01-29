@@ -9,8 +9,8 @@ import { getHomeVenueList, ParamsVenueList } from "@/actions/home";
 import { VenueDateType } from "@/reducers/manger/venue";
 import { areaList } from "@/utils/area";
 import { dictKeyName } from "@/reducers/global";
+import { cloneDeep } from "lodash";
 import styles from "./index.module.scss";
-import { cloneDeep } from 'lodash'
 
 const customStyle = "height: 60%; background:#1a1a1a; color:#fff;";
 
@@ -26,7 +26,7 @@ const BtnGroup: Taro.FC<{
   const home: HomeStateType = useSelector((state) => state.home);
   const dispatch = useDispatch();
   const { currentArea, theme } = home;
-  console.log('currentArea: ', currentArea);
+  console.log("currentArea: ", currentArea);
 
   const handleBtn = (id: string) => {
     if (type === "area") {
@@ -45,16 +45,17 @@ const BtnGroup: Taro.FC<{
       } as HomeAction);
     }
   };
-  
+
   const list = cloneDeep(data);
-  list.unshift({value:'全部',id:''})
+  list.unshift({ value: "全部", id: "" });
 
   return (
     <View className={styles.btnGroup}>
       {list.map((item: AreaItem) => (
         <AtButton
           type={
-            (type ==='area' && currentArea === item.id || type ==='type' && theme === item.id)
+            (type === "area" && currentArea === item.id) ||
+            (type === "type" && theme === item.id)
               ? "primary"
               : "secondary"
           }
@@ -191,18 +192,22 @@ const HomePage: Taro.FC = () => {
             </View>
           ))}
         </View>
-        {
-          venueList.length === 0 ?
-          <van-empty/>:
+        {venueList.length === 0 ? (
+          <van-empty />
+        ) : (
           <AtLoadMore
-            customStyle={{background:'transparent', height:40, color:'#fff' }}
+            customStyle={{
+              background: "transparent",
+              height: 40,
+              color: "#fff",
+            }}
             status={
               (!canloading && "noMore") ||
               (canloading && "more") ||
               ((loadingReducer as any).listLoading && "loading")
             }
           />
-        }
+        )}
       </ScrollView>
       <van-popup
         show={show}

@@ -45,7 +45,7 @@ const INITIAL_STATE: TabbarStateType = {
     },
     {
       text: "我的",
-      pagePath: "/pages/me/index",
+      pagePath: "/pages/me/index/index",
       iconPath: "../images/me.png",
       selectedIconPath: "../images/me-active.png",
     },
@@ -65,7 +65,7 @@ const INITIAL_STATE: TabbarStateType = {
     },
     {
       text: "我的",
-      pagePath: "/pages/me/index",
+      pagePath: "/pages/me/index/index",
       iconPath: "../images/me.png",
       selectedIconPath: "../images/me-active.png",
     },

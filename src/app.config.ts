@@ -7,7 +7,8 @@ export default {
     "pages/manager/personTralar/index",
     "pages/lessionDetail/index",
     "pages/authorize/login/index",
-    "pages/me/index",
+    "pages/me/index/index",
+    "pages/me/myinfo/index",
     "pages/manager/index",
     "pages/venueDetail/index",
     "pages/shop/index",
@@ -40,7 +41,7 @@ export default {
       },
       {
         text: "我的",
-        pagePath: "pages/me/index",
+        pagePath: "pages/me/index/index",
         iconPath: "images/me.png",
         selectedIconPath: "images/me-active.png",
       },

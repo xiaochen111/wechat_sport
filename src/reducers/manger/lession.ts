@@ -64,7 +64,7 @@ export interface LessionAllStateType {
   [key: string]: any;
 }
 
-/** 场馆type 类型 */
+/** 课程type 类型 */
 export enum LessionActionType {
   /**上传成功后设置主图片 */
   SET_MAIN_PIC = "SET_MAIN_PIC",
@@ -152,7 +152,7 @@ export default function lession(state = initialState, action: LessionAction) {
     case LessionActionType.ADD_LIESSION:
       return {
         ...state,
-        lessionData: {} as LessionStateType,
+        lessionData: { status: 0 } as LessionStateType,
         isEidt: false,
       };
     default:

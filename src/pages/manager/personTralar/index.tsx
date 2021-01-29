@@ -27,9 +27,11 @@ import {
   eidtPersonTralar,
   personTralarFileUplad,
 } from "@/actions/manger/personTralar";
+import { getVenueList } from "@/actions/manger/indexManager";
+import CombineVenue from "../lession/combineVenue";
 import styles from "./index.module.scss";
 
-type NeedSet = "endTime" | "startTime";
+type NeedSet = "endTime" | "startTime" | "venuiName";
 
 type NeedSetMap = Record<NeedSet, any>;
 
@@ -39,19 +41,23 @@ const VenuePage: Taro.FC = () => {
   const [show, setShow] = useState<boolean>(false);
   const [isDatePopup, setIsDatePopup] = useState<NeedSet>("startTime");
   const [selectData, setSelectData] = useState<NeedSetMap>({} as NeedSetMap);
+  const [showVenue, setShowVenue] = useState<boolean>(false);
 
   const state: CombineType = useSelector((s: CombineType) => s);
   const personTralar: PersonTralarStateType = state.personTralar;
   const loadingReducer: any = state.loadingReducer;
+  const managerIndex = state.managerIndex;
 
   const dispatch = useDispatch();
   const { personTralarData, isEidt } = personTralar;
+  console.log("personTralarData: ", personTralarData);
 
   useEffect(() => {
     if (isEidt) {
       setSelectData({
         endTime: personTralarData.endTime,
         startTime: personTralarData.startTime,
+        venuiName: personTralarData.venueName,
       });
     }
   }, [isEidt]);
@@ -142,10 +148,38 @@ const VenuePage: Taro.FC = () => {
     }
   };
 
+  const handleItem = (item: any) => {
+    setSelectData({ ...selectData, venuiName: item.name });
+    handleChange(item.id, "venueId");
+    setShowVenue(false);
+  };
+
+  const handleSearch = (name: string) => {
+    dispatch({
+      thunk: getVenueList({ pageNo: 1, name }),
+    });
+  };
+
+  const openVenueList = () => {
+    setShowVenue(true);
+    dispatch({
+      thunk: getVenueList({ pageNo: 1 }),
+    });
+  };
+
   return (
     <View className={styles.formModule}>
       <AtMessage />
       <AtForm customStyle="zIndex:0">
+        <AtInput
+          name="venuiName"
+          title="关联场馆"
+          type="text"
+          value={selectData.venuiName}
+          editable={false}
+          onClick={openVenueList}
+          onChange={() => {}}
+        />
         <AtInput
           name="coashName"
           title="私教名称"
@@ -267,6 +301,20 @@ const VenuePage: Taro.FC = () => {
             oncancel={() => setShow(false)}
           />
         )}
+      </van-popup>
+
+      {/* 关联场馆弹窗 */}
+      <van-popup
+        show={showVenue}
+        position="bottom"
+        customStyle={customStyle}
+        onclose={() => setShowVenue(false)}
+      >
+        <CombineVenue
+          list={managerIndex.venueList}
+          handleItem={handleItem}
+          handleSearch={handleSearch}
+        />
       </van-popup>
     </View>
   );

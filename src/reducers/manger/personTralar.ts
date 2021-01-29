@@ -1,6 +1,8 @@
 import { JyObj } from "./venue";
 
 export interface PersonTralarDateType {
+  /**关联场馆 */
+  venueId: string;
   /**私教主题 */
   coashTheme: string;
   /**私教名字 */
@@ -31,6 +33,7 @@ export type PersonTralarColoumn = keyof PersonTralarDateType;
 /**校验字端 */
 type PersonTralarDateRequire = Record<PersonTralarColoumn, JyObj>;
 export const checkPersonTralarColoumns: PersonTralarDateRequire = {
+  venueId: { errMsg: "场馆不能为空" },
   address: { errMsg: "地址不能为空" },
   startTime: { errMsg: "开始时间不能为空" },
   endTime: { errMsg: "结束时间不能为空" },
@@ -154,7 +157,7 @@ export default function personTralar(
     case PersonTarlarType.ADD_PERSON_TRALAR:
       return {
         ...state,
-        personTralarData: {} as PersonTralarDateType,
+        personTralarData: { status: 0 } as PersonTralarDateType,
         isEidt: false,
       };
     default:

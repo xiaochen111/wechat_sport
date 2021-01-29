@@ -21,15 +21,15 @@ const MePage: Taro.FC = () => {
       <View className={styles.meau}>
         <AtList>
           <AtListItem title="我的订单" arrow="right" />
-          <AtListItem title="联系电话" arrow="right" />
+          {/* <AtListItem title="联系电话" arrow="right" /> */}
           <AtListItem title="个人信息" arrow="right" />
         </AtList>
 
-        {userInfo.isAdmin && (
+        {userInfo.isAdmin ? (
           <View className={styles.logout}>
             <AtButton type="primary">退出登录</AtButton>
           </View>
-        )}
+        ) : null}
       </View>
     </View>
   );
